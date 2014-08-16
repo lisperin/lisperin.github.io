@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Reader Macros in Common Lisp"
-permalink: /reader-macros
+permalink: /reader-macros.html
 ---
 
 Reader macros are perhaps not as famous as ordinary macros. While macros are a great way to create your own DSL, reader macros provide even greater flexibility by allowing you to create entirely new syntax on top of Lisp.
