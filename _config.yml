@@ -8,7 +8,4 @@ twitter_username: chaitanya_gupta
 github_username:  chaitanyagupta
 
 # Build settings
-markdown: kramdown
-
-kramdown:
-  input: GFM
+markdown: redcarpet
