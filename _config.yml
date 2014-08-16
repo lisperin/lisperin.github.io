@@ -9,3 +9,6 @@ github_username:  chaitanyagupta
 
 # Build settings
 markdown: redcarpet
+
+redcarpet:
+  extensions: [with_toc_data]
