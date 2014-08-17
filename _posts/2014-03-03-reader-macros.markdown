@@ -559,8 +559,8 @@ Source code used in this post is available in a [json-reader.lisp][]. A battery 
 [comma]: http://www.lispworks.com/documentation/HyperSpec/Body/02_dg.htm
 [backquote syntax]: http://www.lispworks.com/documentation/HyperSpec/Body/02_df.htm
 [read]: http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_rd.htm
-[json-reader.lisp]: #file-json-reader-lisp
-[test.lisp]: #file-test-lisp
+[json-reader.lisp]: /src/reader-macros/json-reader.lisp
+[test.lisp]: /src/reader-macros/test.lisp
 [Dynamic variable]: http://www.gigamonkeys.com/book/variables.html#dynamic-aka-special-variables
 [Named-Readtables]: http://common-lisp.net/project/named-readtables/
 [reddit thread]: http://www.reddit.com/r/lisp/comments/1zfim8/reader_macros_in_common_lisp/
