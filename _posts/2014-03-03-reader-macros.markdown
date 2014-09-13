@@ -4,6 +4,8 @@ title:  "Reader Macros in Common Lisp"
 permalink: /reader-macros
 ---
 
+_This post originally appeared as a [github gist][]._
+
 Reader macros are perhaps not as famous as ordinary macros. While macros are a great way to create your own DSL, reader macros provide even greater flexibility by allowing you to create entirely new syntax on top of Lisp.
 
 Paul Graham explains them very well in [On Lisp][] (Chapter 17, Read-Macros):
@@ -546,6 +548,7 @@ Source code used in this post is available in a [json-reader.lisp][]. A battery 
 
 3. Technically, cl-interpol doesn't define a new reader macro, it installs `?` (question mark) as a "sub character" of the standard [dispatching macro character][sharpsign] `#` (sharpsign). Dispatching macro characters are a special class of reader macros which allow you to "make the most of the ASCII character set; one can only have so many one-character read-macros." (On Lisp, Chapter 17, Read-Macros)
 
+[github gist]: https://gist.github.com/chaitanyagupta/9324402
 [On Lisp]: http://www.paulgraham.com/onlisp.html
 [atom]: http://www.lispworks.com/documentation/HyperSpec/Body/t_atom.htm
 [list]: http://www.lispworks.com/documentation/HyperSpec/Body/t_list.htm
