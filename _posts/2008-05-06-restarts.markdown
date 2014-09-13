@@ -17,6 +17,18 @@ rating,url,visitors,date
 5,http://chaitanyagupta.com/code,2121212,2007-03-03
 ```
 
+### Contents
+
+* [Valiating the headers](#valiating-the-headers)
+* [Signaling validation errors](#signaling-validation-errors)
+* [Parsing the CSV](#parsing-the-csv)
+* [The Validator (sans the restarts)](#the-validator-(sans-the-restarts))
+* [Putting restarts in place](#putting-restarts-in-place)
+* [Starting all over again](#starting-all-over-again)
+* [Handling restarts](#handling-restarts)
+* [Conclusion](#conclusion)
+* [Notes](#notes)
+
 ## Valiating the headers
 
 First we write functions to validate the four headers we used above: `rating`, `url`, `visitors`, and `date`. Note that these functions depend on [CL-PPCRE](http://weitz.de/cl-ppcre).

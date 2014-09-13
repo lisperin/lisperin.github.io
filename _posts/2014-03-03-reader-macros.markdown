@@ -20,6 +20,18 @@ The Lisp reader is the thing that parses and translates raw text into an AST. In
 
 Reader macros allow you to modify the behaviour of the Lisp reader.
 
+### Contents
+
+* [Invoking the Lisp reader](#invoking-the-lisp-reader)
+* [Quote](#quote)
+* [JSON](#json)
+* [Refining the JSON reader](#refining-the-json-reader)
+* [Packaging the new syntax](#packaging-the-new-syntax)
+* [Conclusion](#conclusion)
+* [Notes](#notes)
+
+## Invoking the Lisp reader
+
 Not only can you modify the behaviour of the Lisp reader, you can also invoke it. The simplest way to invoke the Lisp reader is to call the function [`READ`][read]. When you call `READ` with no arguments, it reads text from the standard input and returns an s-expression as soon as it fully parses one.
 
     > (read)
