@@ -6,9 +6,12 @@ permalink: /restarts
 
 _This post originally appeared on [chaitanyagupta.com](http://chaitanyagupta.com)._
 
-Common Lisp's condition system, with its exceptions and restarts, is one of its unique features. Unfortunately, there aren't many good tutorials explaining this concept very well. One good introduction to this is the chapter on conditions and restarts in Peter Seibel's excellent book, Practical Common Lisp (see 1, 2). This tutorial assumes some knowledge of the condition system, so you might want to read that chapter before proceeding.
+Common Lisp's condition system, with its exceptions and restarts, is one of its unique features. Unfortunately, there aren't many good tutorials explaining this concept very well. One good introduction to this is the chapter on conditions and restarts in Peter Seibel's excellent book, [Practical Common Lisp][pcl-conditions-restarts]. This tutorial assumes some knowledge of the condition system, so you might want to read that chapter before proceeding. Another good read is Kent Pitman's paper, [Condition Handling in the Lisp Language Family][kp-condition-handling].
 
 I'll attempt to show how effective CL's condition system can be, with a validator for CSV (comma-separated values) files. The validator will check that all the fields in each row of the file are valid (according to some defined criteria).
+
+[pcl-conditions-restarts]: http://gigamonkeys.com/book/beyond-exception-handling-conditions-and-restarts.html
+[kp-condition-handling]: http://www.nhplace.com/kent/Papers/Condition-Handling-2001.html
 
 ### Contents
 
@@ -41,13 +44,11 @@ First we write functions to validate fields for the four headers we used above: 
   (unless (cl-ppcre:scan "^https?://" string)
     (csv-error "URL invalid." :value string)))
 
-
 (defun validate-rating (string)
   "String should contain an integer between 1 and 5, inclusive."
   (let ((rating (parse-integer string :junk-allowed t)))
     (unless (and (integerp rating) (<= 1 rating 5))
       (csv-error "Rating not an integer in range." :value string))))
-
 
 (defun validate-visitors (string)
   "The number of visitors to the page; string should contain an
@@ -56,11 +57,10 @@ integer more than or equal to zero."
     (unless (and (integerp visitors) (>= visitors 0))
       (csv-error "Number of visitors invalid." :value string))))
 
-
 (defun validate-date (string)
   "The published date of the URL. Should be in yyyy-mm-dd format."
   (let ((split (cl-ppcre:split "-" string)))
-    (flet ((!valid-number-of-digits-p (string n)   ; See note 3
+    (flet ((!valid-number-of-digits-p (string n)   ; See note 1
              (and (every #'digit-char-p string)
                   (= (length string) n))))
       (unless (and (!valid-number-of-digits-p (first split) 4)
@@ -93,7 +93,6 @@ The function `csv-error` signals a condition of type `csv-error`, both of which 
     :initform nil
     :documentation "The line number of the row in for the error was signalled.")))
 
-
 ;; Do something more useful than the default printer behaviour
 (defmethod print-object ((object csv-error) stream)
   (print-unreadable-object (object stream :type t :identity t)
@@ -101,7 +100,6 @@ The function `csv-error` signals a condition of type `csv-error`, both of which 
             (csv-error-line-number object)
             (csv-error-message object)
             (csv-error-value object))))
-
 
 ;; We use this function to signal our validation error
 (defun csv-error (message &key value line-number)
@@ -151,7 +149,6 @@ This version of the validator doesn't contain any restarts though.
             for header in headers
             for field in row
             do (validate-field header field))))))
-
 
 ;; Takes a header name and a string value as arguments; checks the
 ;; validity of the value by calling the appropriate validator function
@@ -225,7 +222,6 @@ We'll add one more restart now: this will allow us to revalidate the whole file 
                 (format stream "Retry validating the file ~A." file))
       (validate-csv file))))
 
-
 (defun validate-csv-aux (file)
   (destructuring-bind (headers . rows)
       (parse-csv-file file)
@@ -281,9 +277,4 @@ If we wanted `list-csv-errors` to list only one error per each row, that change 
 
 ## Notes
 
-
-1. [Beyond Exception Handling: Conditions and Restarts](http://gigamonkeys.com/book/beyond-exception-handling-conditions-and-restarts.html) from Practical Common Lisp
-
-2. Another good read is Kent Pitman's paper, [Condition Handling in the Lisp Language Family](http://www.nhplace.com/kent/Papers/Condition-Handling-2001.html)
-
-3. A particular convention I follow is to prefix the names of local functions (defined using FLET and LABELS) with an exclaimation mark (!). This makes it very easy to identify a particular name as a local function or a macro name.
+1. A particular convention I follow is to prefix the names of local functions (defined using FLET and LABELS) with an exclaimation mark (!). This makes it very easy to identify a particular name as a local function or a macro name.
