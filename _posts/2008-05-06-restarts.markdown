@@ -4,9 +4,25 @@ title: "Common Lisp: A Tutorial on Conditions and Restarts"
 permalink: /restarts
 ---
 
+_This post originally appeared on [chaitanyagupta.com](http://chaitanyagupta.com)._
+
 Common Lisp's condition system, with its exceptions and restarts, is one of its unique features. Unfortunately, there aren't many good tutorials explaining this concept very well. One good introduction to this is the chapter on conditions and restarts in Peter Seibel's excellent book, Practical Common Lisp (see 1, 2). This tutorial assumes some knowledge of the condition system, so you might want to read that chapter before proceeding.
 
 I'll attempt to show how effective CL's condition system can be, with a validator for CSV (comma-separated values) files. The validator will check that all the fields in each row of the file are valid (according to some defined criteria).
+
+### Contents
+
+* [The CSV](#the-csv)
+* [Signaling validation errors](#signaling-validation-errors)
+* [Parsing the CSV](#parsing-the-csv)
+* [The Validator (sans the restarts)](#the-validator-(sans-the-restarts))
+* [Putting restarts in place](#putting-restarts-in-place)
+* [Starting all over again](#starting-all-over-again)
+* [Handling restarts](#handling-restarts)
+* [Conclusion](#conclusion)
+* [Notes](#notes)
+
+## The CSV
 
 The first row of the CSV will be a comma-separated list of headers, followed by rows with each column corresponding to the headers in the first row. A sample file looks like this:
 
@@ -17,21 +33,7 @@ rating,url,visitors,date
 5,http://chaitanyagupta.com/code,2121212,2007-03-03
 ```
 
-### Contents
-
-* [Valiating the headers](#valiating-the-headers)
-* [Signaling validation errors](#signaling-validation-errors)
-* [Parsing the CSV](#parsing-the-csv)
-* [The Validator (sans the restarts)](#the-validator-(sans-the-restarts))
-* [Putting restarts in place](#putting-restarts-in-place)
-* [Starting all over again](#starting-all-over-again)
-* [Handling restarts](#handling-restarts)
-* [Conclusion](#conclusion)
-* [Notes](#notes)
-
-## Valiating the headers
-
-First we write functions to validate the four headers we used above: `rating`, `url`, `visitors`, and `date`. Note that these functions depend on [CL-PPCRE](http://weitz.de/cl-ppcre).
+First we write functions to validate fields for the four headers we used above: `rating`, `url`, `visitors`, and `date`. Note that these functions depend on [CL-PPCRE](http://weitz.de/cl-ppcre).
 
 ```lisp
 (defun validate-url (string)
