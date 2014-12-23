@@ -226,8 +226,8 @@ form.
            (format t "~&t + ~A sec~%" (- (get-universal-time) start))))
     (pcl:progn (princ 1)
                (delta-now)
-               (with-delay (2)
-                 (princ 2))
+               (pcl:sleep 2)
+               (princ 2)
                (delta-now)
                (princ 3))))
 ; 1
@@ -237,10 +237,10 @@ form.
 ; 3
 ```
 
-The macro `WITH-DELAY` schedules a timer on a runloop and executes its
-body once the timer expires. In this example, the last two forms are
-executed only after the promise returned by `WITH-DELAY` is
-resolved.
+The function `PCL:SLEEP` schedules a timer on a runloop and returns a
+promise that is resolved when the timer expires. In this example, the
+last two forms are executed only after the promise returned by
+`PCL:SLEEP` is resolved.
 
 Contrast the behaviour above with that of `CL:PROGN` where subsequent
 forms are executed immediately and the output will look like this:
@@ -262,8 +262,8 @@ the remaining forms are not evaluated.
            (format t "~&t + ~A sec~%" (- (get-universal-time) start))))
     (pcl:progn (princ 1)
                (delta-now)
-               (with-delay (2)
-                 (princ 2))
+               (pcl:sleep 2)
+               (princ 2)
                (error "foo")
                (delta-now)
                (princ 3))))
@@ -288,8 +288,8 @@ evaluated within the context of `PCL:PROGN` instead of `PROGN`.[^4]
            (pcl:let* ,(rest bindings)
              ,@body)))))
 
-(pcl:let* ((a (with-delay (1) 10))
-           (b (with-delay (2) 20)))
+(pcl:let* ((a (pcl:progn (pcl:sleep 1) 10))
+           (b (pcl:progn (pcl:sleep 2) 20)))
   (print (+ a b)))
 ; 30
 ```
