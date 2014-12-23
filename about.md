@@ -4,4 +4,4 @@ title: About
 permalink: /about/
 ---
 
-Musings about Lisp by [Chaitanya Gupta](http://chaitanyagupta.com/).
+Thoughts on Lisp and programming in general by [Chaitanya Gupta](http://chaitanyagupta.com/).
