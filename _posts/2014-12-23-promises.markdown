@@ -1,0 +1,377 @@
+---
+layout: post
+title:  "Promises and Lisp"
+permalink: /promises
+---
+
+While I had seen promises before, I didn't really understand their
+significance until I read Domenic Denicola's
+[You're Missing the Point of Promises][domenic-promises]. Its an
+enlightening essay and I highly recommend reading it. Ever since, I
+have looked to use promises where possible. I have also thought a bit
+about how one might use these constructs in Common Lisp.
+
+### Contents
+
+* [The point of promises](#the-point-of-promises)
+* [Promises in Lisp](#promises-in-lisp)
+* [Macros](#macros)
+* [Putting things together](#putting-things-together)
+
+## The point of promises
+
+Here's a brief summary: a promise is an object that acts as a proxy
+for a result that is initially unknown, usually because the
+computation of its value is yet incomplete.[^1] In other words, they
+allow you to transform an async program from continuation passing
+style:[^2]
+
+```js
+getTweetsFor("domenic", function (err, results) {
+  // the rest of your code goes here.
+});
+```
+
+to one where your functions return an object which represents the
+eventual results of that operation:
+
+```js
+var promiseForTweets = getTweetsFor("domenic");
+promiseForTweets.then(function (results) {
+  // success handler
+}, function (error) {
+  // error handler
+});
+```
+
+The function `then` allows you to add a success and an error handler
+to a promise. When the promise is fulfilled (i.e. the computation
+completes successfully), the result is passed to the success
+handler. And if the promise fails (the computation errors out), the
+error is sent to the error handler.
+
+There's more though. `then` returns a new promise. That promise is
+fulfilled when the relevant handler returns successfully and gets
+rejected when it errors out. In addition, if the handler itself
+returns a promise, the state of the promise returned by `then` depends
+on this new promise.
+
+All of this allows you to write asynchronous code:
+
+```js
+getTweetsFor("domenic") // promise-returning function
+  .then(function (tweets) {
+    var shortUrls = parseTweetsForUrls(tweets);
+    var mostRecentShortUrl = shortUrls[0];
+    return expandUrlUsingTwitterApi(mostRecentShortUrl); // promise-returning function
+  })
+  .then(httpGet) // promise-returning function
+  .then(
+    function (responseBody) {
+      console.log("Most recent link text:", responseBody);
+    },
+    function (error) {
+      console.error("Error with the twitterverse:", error);
+    }
+  );
+```
+
+that parallels the synchronous code:
+
+```js
+try {
+  var tweets = getTweetsFor("domenic"); // blocking
+  var shortUrls = parseTweetsForUrls(tweets);
+  var mostRecentShortUrl = shortUrls[0];
+  var responseBody = httpGet(expandUrlUsingTwitterApi(mostRecentShortUrl)); // blocking x 2
+  console.log("Most recent link text:", responseBody);
+} catch (error) {
+  console.error("Error with the twitterverse: ", error);
+}
+```
+
+which is much nicer than the callback hell that you get otherwise.
+
+What I have summarized here doesn't really do justice to the subject,
+so if all of this is not very clear, do go through
+[Domenic's post][domenic-promises] to get a better idea.
+
+## Promises in Lisp
+
+Before we look at promises in Lisp, its worth seeing what a
+synchronous version of the Javascript code above might look like in
+Common Lisp:
+
+```lisp
+(handler-case
+    (let* ((tweets (get-tweets-for user))
+           (short-urls (parse-tweets-for-urls tweets))
+           (expanded-url (expand-url-using-twitter-api (elt short-urls 0)))
+           (response-body (http-get expanded-url)))
+      (format t "Most recent link text: ~A~%" response-body))
+  (error (c) (format t "Got error: ~A~%" c)))
+```
+
+Assume that we have an implementation of promises like the one
+described above[^3], how would our promises based code look?
+
+```lisp
+(then (then (then (get-tweets-for user)
+                  (lambda (tweets)
+                    (let ((short-urls (parse-tweets-for-urls tweets)))
+                      (expand-url-using-twitter-api (elt short-urls 0)))))
+            #'http-get)
+      (lambda (body)
+        (format t "Most recent link text: ~A~%" body))
+      (lambda (error)
+        (format t "Got an error: ~A~%" error)))
+```
+
+Certainly not as good as Javascript. We could do a little better by
+binding the promises in a `LET*`:
+
+```lisp
+(let* ((tweets-promise (get-tweets-for user))
+       (short-urls-promise (then tweets-promise (lambda (tweets)
+                                                  (parse-tweets-for-urls tweets))))
+       (expanded-url-promise (then short-urls-promise
+                                   (lambda (short-urls)
+                                     (expand-url-using-twitter-api (elt short-urls 0)))))
+       (response-body-promise (then expanded-url-promise #'http-get)))
+  (then response-body-promise
+        (lambda (response-body)
+          (format t "Most recent link text: ~A~%" response-body))
+        (lambda (error)
+          (format t "Got an error: ~A~%" error))))
+```
+
+But the result still leaves a lot to be desired. If only Lisp had the
+dot notation like Javascript...
+
+## Macros
+
+Lisp doesn't have the dot notation, but it does have another trick up
+its sleeve -- macros. Can macros help us bridge the gap between the
+synchronous and async variants?
+
+Let's start with a simple macro, `PROMISE-VALUES-BIND`:
+
+```lisp
+(defmacro promise-values-bind (var-list form &body body)
+  (let ((values (gensym "VALUES-")))
+    `(multiple-value-call
+         (lambda (&rest ,values)
+           (if (promisep (first ,values))
+               (then (first ,values)
+                           (lambda ,var-list
+                             ,@body))
+               (destructuring-bind ,var-list
+                   ,values
+                 ,@body)))
+       ,form)))
+```
+
+This macro is quite similar to `MULTIPLE-VALUE-BIND`. It evalues the
+given `form`, and binds its values to the variables in `var-list`. If
+the `form` returned a promise as its first value, then instead of
+binding immediately, it waits for the promise to be fulfilled and
+binds `var-list` to the resolved values.
+
+```lisp
+(promise-values-bind (quotient remainder)
+    (values 10 3)
+  (format t "First: ~A, Second: ~A~%" quotient remainder))
+;; =>
+; First: 10, Second: 3
+NIL
+
+
+(let ((promise (make-promise)))
+  (promise-values-bind (quotient remainder)
+      promise
+    (format t "First: ~A, Second: ~A~%" quotient remainder))
+  promise)
+;; =>
+#<PROMISE Un {1004F93643}>
+
+(fulfill * 10 3)
+;; =>
+; First: 10, Second: 3
+NIL
+```
+
+Using `PROMISE-VALUES-BIND`, we write a promise based variant of
+`PROGN`. We will give it the same name but define it in a new package,
+`PCL`.
+
+```lisp
+(defmacro pcl:progn (&body forms)
+  (cond ((null forms) nil)
+        ((null (rest forms)) (first forms))
+        (t (let ((x (gensym "X-")))
+             `(promise-values-bind (&rest ,x)
+                  ,(first forms)
+                (declare (ignore ,x))
+                (pcl:progn ,@(rest forms)))))))
+```
+
+Just like its CL counterpart, `PCL:PROGN` evaluates the given forms
+sequentially. However if any of the forms returns a promise, this
+macro waits for the promise to be resolved before evaluating the next
+form.
+
+```lisp
+(let ((start (get-universal-time)))
+  (flet ((delta-now () 
+           (format t "~&t + ~A sec~%" (- (get-universal-time) start))))
+    (pcl:progn (princ 1)
+               (delta-now)
+               (with-delay (2)
+                 (princ 2))
+               (delta-now)
+               (princ 3))))
+; 1
+; t + 0 sec
+; 2
+; t + 2 sec
+; 3
+```
+
+The macro `WITH-DELAY` schedules a timer on a runloop and executes its
+body once the timer expires. In this example, the last two forms are
+executed only after the promise returned by `WITH-DELAY` is
+resolved.
+
+Contrast the behaviour above with that of `CL:PROGN` where subsequent
+forms are executed immediately and the output will look like this:
+
+```lisp
+; 1
+; t + 0 sec
+; t + 0 sec
+; 3
+; 2 
+```
+
+Moreover, if any form signals an error, or any promise is rejected,
+the remaining forms are not evaluated.
+
+```lisp
+(let ((start (get-universal-time)))
+  (flet ((delta-now () 
+           (format t "~&t + ~A sec~%" (- (get-universal-time) start))))
+    (pcl:progn (princ 1)
+               (delta-now)
+               (with-delay (2)
+                 (princ 2))
+               (error "foo")
+               (delta-now)
+               (princ 3))))
+; 1
+; t + 0 sec
+; 2
+;; At this point, the debugger is invoked with #<SIMPLE-ERROR "foo" {1007381233}>
+```
+
+Next up is `PCL:LET*`, our variant of `LET*`. Bindings are performed
+sequentially, and if an init-form returns a promise, the binding is
+delayed until the promise is resolved. Also, the body of `PCL:LET*` is
+evaluated within the context of `PCL:PROGN` instead of `PROGN`.[^4]
+
+```lisp
+(defmacro pcl:let* (bindings &body body)
+  (if (null bindings)
+      `(pcl:progn ,@body)
+      (let ((binding (first bindings)))
+        `(promise-values-bind (,(first binding))
+             ,(second binding)
+           (pcl:let* ,(rest bindings)
+             ,@body)))))
+
+(pcl:let* ((a (with-delay (1) 10))
+           (b (with-delay (2) 20)))
+  (print (+ a b)))
+; 30
+```
+
+And `PCL:HANDLER-CASE` is the promised counterpart of `HANDLER-CASE`.
+
+```lisp
+(defmacro pcl:handler-case (expression &rest clauses)
+  (let ((values (gensym "VALUES-"))
+        (c (gensym "C-"))
+        (clauses (mapcar (lambda (clause)
+                           (destructuring-bind (type (&rest vars) &body body)
+                               clause
+                             `(,type ,vars (pcl:progn ,@body))))
+                         clauses)))
+    `(handler-case
+         (multiple-value-call
+             (lambda (&rest ,values)
+               (if (promisep (first ,values))
+                   (then (first ,values)
+                         nil
+                         (lambda (,c)
+                           (handler-case (signal ,c)
+                             ,@clauses)))
+                   (values-list ,values)))
+           ,expression)
+       ,@clauses)))
+```
+
+## Putting things together
+
+With these macros in place, its time to see the result. Our promise
+based async code looks like this:
+
+```lisp
+(pcl:handler-case
+    (pcl:let* ((tweets (get-tweets-for user))
+               (short-urls (parse-tweets-for-urls tweets))
+               (expanded-url (expand-url-using-twitter-api (elt short-urls 0)))
+               (response-body (http-get expanded-url)))
+      (format t "Most recent link text: ~A~%" response-body))
+  (error (c) (format t "Got error: ~A~%" c)))
+```
+
+Except for the change in symbol packages, our async code looks
+*identical* to the synchronous code. While the rest of the world waits
+for the language gods to provide the right
+[syntactic tools][es6-async-generators], Lispers can just write macros 😄
+
+These were just three forms, we can go a lot further than this. Add
+promised counterparts for a few more special forms and macros like
+`UNWIND-PROTECT`, `LAMBDA`, `DEFUN`, `IF`, etc. and you end up with a
+set that starts to become useful.
+
+Add promised variants of blocking I/O functions like `READ-CHAR`,
+`WRITE-CHAR`, `READ-BYTES`, etc. and you end up with a nice little
+async I/O framework.[^5]
+
+Debugging is a bit of a challenge with promises. Backtraces become
+pretty much useless, although that's usually the case with callback
+hell too. Its also not as convenient to step through an async program
+as it is with synchronous code.
+
+However, all said and done, the combination of macros and promises
+still holds great promise 😉
+
+Source code to accompany this post is available on
+[github][source]. It contains a working implementation of promises,
+though you shouldn't use it to write any serious code.
+
+[^1]: Definition from [Wikipedia](http://en.wikipedia.org/wiki/Futures_and_promises)
+
+[^2]: Almost all javascript code has been copied from [Domenic's post][domenic-promises]
+
+[^3]: Since Lisp functions can return multiple values, the success handler for the `THEN` block in Lisp could be sent multiple arguments instead of just one.
+
+[^4]: Handling of the body in `PCL:LET*` is incomplete here. `LET/LET*` allow optional [DECLARE][cl-declare] forms to precede the body, so `PCL:LET*` should too. I have chosen to ignore this but it shouldn't be very hard to do.
+
+[^5]: Not sure if such a framework exists in CL today. [cl-async][] seems to do some of it but not all.
+
+[domenic-promises]: https://blog.domenic.me/youre-missing-the-point-of-promises/
+[es6-async-generators]: http://davidwalsh.name/async-generators
+[cl-declare]: http://www.lispworks.com/documentation/HyperSpec/Body/s_declar.htm#declare
+[cl-async]: https://github.com/orthecreedence/cl-async
+[source]: https://github.com/chaitanyagupta/promises
