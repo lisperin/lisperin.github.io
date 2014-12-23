@@ -11,4 +11,4 @@ github_username:  chaitanyagupta
 markdown: redcarpet
 
 redcarpet:
-  extensions: [with_toc_data]
+  extensions: [with_toc_data, footnotes]
