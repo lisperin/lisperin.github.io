@@ -242,17 +242,6 @@ promise that is resolved when the timer expires. In this example, the
 last two forms are executed only after the promise returned by
 `PCL:SLEEP` is resolved.
 
-Contrast the behaviour above with that of `CL:PROGN` where subsequent
-forms are executed immediately and the output will look like this:
-
-```lisp
-; 1
-; t + 0 sec
-; t + 0 sec
-; 3
-; 2 
-```
-
 Moreover, if any form signals an error, or any promise is rejected,
 the remaining forms are not evaluated.
 
