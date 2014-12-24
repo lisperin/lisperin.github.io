@@ -347,7 +347,8 @@ still holds great promise 😉
 
 Source code to accompany this post is available on
 [github][source]. It contains a working implementation of promises,
-though you shouldn't use it to write any serious code.
+though you shouldn't use it to write any serious code (try
+[Blackbird][] if you want a practical implementation of promises).
 
 [^1]: Definition from [Wikipedia](http://en.wikipedia.org/wiki/Futures_and_promises)
 
@@ -359,8 +360,9 @@ though you shouldn't use it to write any serious code.
 
 [^5]: Not sure if such a framework exists in CL today. [cl-async][] seems to do some of it but not all.
 
+[source]: https://github.com/chaitanyagupta/promises
 [domenic-promises]: https://blog.domenic.me/youre-missing-the-point-of-promises/
 [es6-async-generators]: http://davidwalsh.name/async-generators
 [cl-declare]: http://www.lispworks.com/documentation/HyperSpec/Body/s_declar.htm#declare
 [cl-async]: https://github.com/orthecreedence/cl-async
-[source]: https://github.com/chaitanyagupta/promises
+[blackbird]: http://orthecreedence.github.io/blackbird/
