@@ -43,6 +43,7 @@ promiseForTweets.then(function (results) {
   // error handler
 });
 ```
+<center><i>Source: [You're Missing the Point of Promises][domenic-promises]</i></center>
 
 The function `then` allows you to add a success and an error handler
 to a promise. When the promise is fulfilled (i.e. the computation
@@ -89,6 +90,7 @@ try {
   console.error("Error with the twitterverse: ", error);
 }
 ```
+<center><i>Source: [You're Missing the Point of Promises][domenic-promises]</i></center>
 
 which is much nicer than the callback hell that you get otherwise.
 
@@ -352,7 +354,7 @@ though you shouldn't use it to write any serious code (try
 
 [^1]: Definition from [Wikipedia](http://en.wikipedia.org/wiki/Futures_and_promises)
 
-[^2]: Almost all javascript code has been copied from [Domenic's post][domenic-promises]
+[^2]: Source for the Javascript code examples and most of the content in the first section is Domenic's [aforementioned post][domenic-promises].
 
 [^3]: Since Lisp functions can return multiple values, the success handler for the `THEN` block in Lisp could be sent multiple arguments instead of just one.
 
