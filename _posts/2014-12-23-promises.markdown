@@ -352,6 +352,9 @@ Source code to accompany this post is available on
 though you shouldn't use it to write any serious code (try
 [Blackbird][] if you want a practical implementation of promises).
 
+<i>Discuss on [Hacker News][hn-discussion] or
+[/r/lisp][rlisp-discussion].</i>
+
 [^1]: Definition from [Wikipedia](http://en.wikipedia.org/wiki/Futures_and_promises)
 
 [^2]: Source for the Javascript code examples and most of the content in the first section is Domenic's [aforementioned post][domenic-promises].
@@ -368,3 +371,5 @@ though you shouldn't use it to write any serious code (try
 [cl-declare]: http://www.lispworks.com/documentation/HyperSpec/Body/s_declar.htm#declare
 [cl-async]: https://github.com/orthecreedence/cl-async
 [blackbird]: http://orthecreedence.github.io/blackbird/
+[hn-discussion]: https://news.ycombinator.com/item?id=8788277
+[rlisp-discussion]: http://www.reddit.com/r/lisp/comments/2q6elh/promises_and_lisp/
