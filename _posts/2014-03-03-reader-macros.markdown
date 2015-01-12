@@ -64,7 +64,7 @@ Simply put, the single quote character `'` is a little bit of syntactic sugar ad
 ```lisp
 (defun single-quote-reader (stream char)
    (declare (ignore char))
-   (list 'quote (read stream t nil t)))
+   (list (quote quote) (read stream t nil t)))
 
 (set-macro-character #\' #'single-quote-reader)
 ```
