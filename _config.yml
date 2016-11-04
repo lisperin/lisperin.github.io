@@ -9,6 +9,4 @@ github_username:  chaitanyagupta
 
 # Build settings
 markdown: kramdown
-
-redcarpet:
-  extensions: [with_toc_data, footnotes]
+highlighter: rouge
