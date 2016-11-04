@@ -60,12 +60,12 @@ integer more than or equal to zero."
 (defun validate-date (string)
   "The published date of the URL. Should be in yyyy-mm-dd format."
   (let ((split (cl-ppcre:split "-" string)))
-    (flet ((!valid-number-of-digits-p (string n)   ; See note 1
+    (flet ((valid-number-of-digits-p (string n)
              (and (every #'digit-char-p string)
                   (= (length string) n))))
-      (unless (and (!valid-number-of-digits-p (first split) 4)
-                   (!valid-number-of-digits-p (second split) 2)
-                   (!valid-number-of-digits-p (third split) 2))
+      (unless (and (valid-number-of-digits-p (first split) 4)
+                   (valid-number-of-digits-p (second split) 2)
+                   (valid-number-of-digits-p (third split) 2))
         (csv-error "Published date not in valid format." :value string)))))
 ```
 
@@ -153,13 +153,13 @@ This version of the validator doesn't contain any restarts though.
 ;; Takes a header name and a string value as arguments; checks the
 ;; validity of the value by calling the appropriate validator function
 (defun validate-field (header value)
-  (flet ((!header-matches (string)
+  (flet ((header-matches (string)
            (string-equal header string)))
     (cond
-      ((!header-matches "url") (validate-url value))
-      ((!header-matches "rating") (validate-rating value))
-      ((!header-matches "visitors") (validate-visitors value))
-      ((!header-matches "date") (validate-date value))
+      ((header-matches "url") (validate-url value))
+      ((header-matches "rating") (validate-rating value))
+      ((header-matches "visitors") (validate-visitors value))
+      ((header-matches "date") (validate-date value))
       (t (csv-error "Invalid header." :value header)))))
 ```
 
@@ -274,7 +274,3 @@ If we want a non-programmer to use the validator, we can provide a way to upload
 What I really like about the condition system is how it allows one to defer decisions to higher-level functions. The low-level functions provide different ways to move forward in case of exceptions (this is what `validate-csv` does), while the higher-level functions actually get to decide what path to take (like `list-csv-errors`).
 
 If we wanted `list-csv-errors` to list only one error per each row, that change would have been trivial, thanks to the restarts we have provided. This separation of logic, IMHO, makes it a very elegant tool in dealing with problems like these.
-
-## Notes
-
-1. A particular convention I follow is to prefix the names of local functions (defined using FLET and LABELS) with an exclaimation mark (!). This makes it very easy to identify a particular name as a local function or a macro name.
