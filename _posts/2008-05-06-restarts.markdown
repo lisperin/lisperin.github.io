@@ -38,7 +38,7 @@ rating,url,visitors,date
 
 First we write functions to validate fields for the four headers we used above: `rating`, `url`, `visitors`, and `date`. Note that these functions depend on [CL-PPCRE](http://weitz.de/cl-ppcre).
 
-```lisp
+```cl
 (defun validate-url (string)
   "The URL of the page; should start with http:// or https://."
   (unless (cl-ppcre:scan "^https?://" string)
@@ -75,7 +75,7 @@ integer more than or equal to zero."
 
 The function `csv-error` signals a condition of type `csv-error`, both of which are defined below.
 
-```lisp
+```cl
 (define-condition csv-error (error)
   ((message
     :initarg :message
@@ -113,7 +113,7 @@ The function `csv-error` signals a condition of type `csv-error`, both of which 
 
 The parser converts raw CSV text into a list of lists -- each item in these lists corresponds to a field in the CSV.
 
-```lisp
+```cl
 (defun parse-csv-file (file)
   (with-open-file (f file :direction :input)
     (loop
@@ -128,7 +128,7 @@ Finally, we get down to writing the validator, `validate-csv`. If the validation
 
 This version of the validator doesn't contain any restarts though.
 
-```lisp
+```cl
 (defun validate-csv (file)
   (destructuring-bind (headers . rows)
       (parse-csv-file file)
@@ -169,7 +169,7 @@ There are a few actions we can take once an "invalid" field has been detected (i
 
 Aborting the validation is as simple as invoking the `ABORT` restart in the debugger, or doing something like this:
 
-```lisp
+```cl
 (handler-case (progn
                 (validate-csv "~/tmp/test.csv")
                 :success)
@@ -178,7 +178,7 @@ Aborting the validation is as simple as invoking the `ABORT` restart in the debu
 
 To continue validation on the same row, or the next one, we add a couple of restarts using the `with-simple-restart` macro:
 
-```lisp
+```cl
 (defun validate-csv (file)
   (destructuring-bind (headers . rows)
       (parse-csv-file file)
@@ -211,7 +211,7 @@ Time for some fun now. Pass an invalid file to the validator, and what do we see
 
 We'll add one more restart now: this will allow us to revalidate the whole file if an error is signalled.
 
-```lisp
+```cl
 ;; Note that what was known as VALIDATE-CSV earlier is now called
 ;; VALIDATE-CSV-AUX.
 
@@ -252,7 +252,7 @@ Apart from the debugger, we can also handle restarts using `handler-bind` and `f
 
 For example, the following function will continue validating the file as long as `CSV-ERROR`s are signalled and one of `CONTINUE-NEXT-FIELD` or `CONTINUE-NEXT-ROW` restarts is available. It collects those errors in a list and returns the same.
 
-```lisp
+```cl
 (defun list-csv-errors (file)
   (let ((result nil))
     (handler-bind
