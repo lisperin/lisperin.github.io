@@ -104,7 +104,7 @@ Before we look at promises in Lisp, its worth seeing what a
 synchronous version of the Javascript code above might look like in
 Common Lisp:
 
-```lisp
+```cl
 (handler-case
     (let* ((tweets (get-tweets-for user))
            (short-urls (parse-tweets-for-urls tweets))
@@ -117,7 +117,7 @@ Common Lisp:
 Assume that we have an implementation of promises like the one
 described above[^3], how would our promises based code look?
 
-```lisp
+```cl
 (then (then (then (get-tweets-for user)
                   (lambda (tweets)
                     (let ((short-urls (parse-tweets-for-urls tweets)))
@@ -132,7 +132,7 @@ described above[^3], how would our promises based code look?
 Certainly not as good as Javascript. We could do a little better by
 binding the promises in a `LET*`:
 
-```lisp
+```cl
 (let* ((tweets-promise (get-tweets-for user))
        (short-urls-promise (then tweets-promise (lambda (tweets)
                                                   (parse-tweets-for-urls tweets))))
@@ -158,7 +158,7 @@ synchronous and async variants?
 
 Let's start with a simple macro, `PROMISE-VALUES-BIND`:
 
-```lisp
+```cl
 (defmacro promise-values-bind (var-list form &body body)
   (let ((values (gensym "VALUES-")))
     `(multiple-value-call
@@ -179,7 +179,7 @@ the `form` returned a promise as its first value, then instead of
 binding immediately, it waits for the promise to be fulfilled and
 binds `var-list` to the resolved values.
 
-```lisp
+```cl
 (promise-values-bind (quotient remainder)
     (values 10 3)
   (format t "First: ~A, Second: ~A~%" quotient remainder))
@@ -206,7 +206,7 @@ Using `PROMISE-VALUES-BIND`, we write a promise based variant of
 `PROGN`. We will give it the same name but define it in a new package,
 `PCL`.
 
-```lisp
+```cl
 (defmacro pcl:progn (&body forms)
   (cond ((null forms) nil)
         ((null (rest forms)) (first forms))
@@ -222,7 +222,7 @@ sequentially. However if any of the forms returns a promise, this
 macro waits for the promise to be resolved before evaluating the next
 form.
 
-```lisp
+```cl
 (let ((start (get-universal-time)))
   (flet ((delta-now () 
            (format t "~&t + ~A sec~%" (- (get-universal-time) start))))
@@ -247,7 +247,7 @@ last two forms are executed only after the promise returned by
 Moreover, if any form signals an error, or any promise is rejected,
 the remaining forms are not evaluated.
 
-```lisp
+```cl
 (let ((start (get-universal-time)))
   (flet ((delta-now () 
            (format t "~&t + ~A sec~%" (- (get-universal-time) start))))
@@ -269,7 +269,7 @@ sequentially, and if an init-form returns a promise, the binding is
 delayed until the promise is resolved. Also, the body of `PCL:LET*` is
 evaluated within the context of `PCL:PROGN` instead of `PROGN`.[^4]
 
-```lisp
+```cl
 (defmacro pcl:let* (bindings &body body)
   (if (null bindings)
       `(pcl:progn ,@body)
@@ -287,7 +287,7 @@ evaluated within the context of `PCL:PROGN` instead of `PROGN`.[^4]
 
 And `PCL:HANDLER-CASE` is the promised counterpart of `HANDLER-CASE`.
 
-```lisp
+```cl
 (defmacro pcl:handler-case (expression &rest clauses)
   (let ((values (gensym "VALUES-"))
         (c (gensym "C-"))
@@ -315,7 +315,7 @@ And `PCL:HANDLER-CASE` is the promised counterpart of `HANDLER-CASE`.
 With these macros in place, its time to see the result. Our promise
 based async code looks like this:
 
-```lisp
+```cl
 (pcl:handler-case
     (pcl:let* ((tweets (get-tweets-for user))
                (short-urls (parse-tweets-for-urls tweets))

@@ -44,7 +44,7 @@ Not only can you modify the behaviour of the Lisp reader, you can also invoke it
 
 The full syntax of `READ` looks like this:
 
-```lisp
+```cl
 (read &optional input-stream eof-error-p eof-value recursive-p) => object
 ```
 
@@ -54,14 +54,14 @@ All the arguments to `READ` are optional. The first is the input stream; `eof-er
 
 One of the simplest (and earliest) examples of a reader macro in Lisp is the single quote character `'`. This reader macro translates an expression of the form `'<some-form>` into `(quote <some-form>)`.
 
-```lisp
+```cl
 'foo       ;; translated to (quote foo)
 '(1 2 3)   ;; translated to (quote (1 2 3))
 ```
 
 Simply put, the single quote character `'` is a little bit of syntactic sugar added on top of Lisp. Reader macros do just that -- allow you to add syntactic sugar to Lisp. What makes them so powerful is that, just like ordinay macros, you write reader macros in Lisp itself. For example, `'` could be defined as:
 
-```lisp
+```cl
 (defun single-quote-reader (stream char)
    (declare (ignore char))
    (list (quote quote) (read stream t nil t)))
@@ -105,7 +105,7 @@ Let's work with a more complicated example. Let's make the Lisp reader recognize
 
 We define a few constants to work with.
 
-```lisp
+```cl
 (defconstant +left-bracket+ #\[)
 (defconstant +right-bracket+ #\])
 (defconstant +left-brace+ #\{)
@@ -116,7 +116,7 @@ We define a few constants to work with.
 
 To read JSON arrays, we dispatch the left bracket to `read-left-bracket`.
 
-```lisp
+```cl
 (defun read-left-bracket (stream char)
   (declare (ignore char))
   (let ((*readtable* (copy-readtable)))
@@ -131,7 +131,7 @@ Note that I haven't provided a complete definition for `read-left-bracket` yet. 
 
 Here's the complete definition for `read-left-bracket`:
 
-```lisp
+```cl
 (defun read-next-object (separator delimiter
                          &optional (input-stream *standard-input*))
   (flet ((peek-next-char () (peek-char t input-stream t nil t))
@@ -183,7 +183,7 @@ The last call to `read-next-object` notices that the next character is the delim
 
 This is how we define `read-separator`, the reader macro function for comma. This function signals an error whenever it is called -- it is never meant to be called directly by the reader.
 
-```lisp
+```cl
 (defun read-separator (stream char)
   (declare (ignore stream))
   (error "Separator ~S shouldn't be read alone" char))
@@ -193,7 +193,7 @@ You might ask, if the separator is never meant to be read directly by the reader
 
 Lastly, we also need to define a macro function for the right bracket. This needs to be done for the same reason we needed to define a macro function for the separator -- so that we can tell the Lisp reader that it is a terminating macro character.
 
-```lisp
+```cl
 (defun read-delimiter (stream char)
   (declare (ignore stream))
   (error "Delimiter ~S shouldn't be read alone" char))
@@ -238,7 +238,7 @@ Remember that you can invoke the reader by calling `READ`, so you can always see
 
 Reading an object is not that different from reading an array. First we define a convenience function to create Lisp hash tables which will be used by `read-left-brace`, the macro function for the left brace.
 
-```lisp
+```cl
 (defun create-json-hash-table (&rest pairs)
   (let ((hash-table (make-hash-table :test #'equal)))
     (loop for (key . value) in pairs
@@ -248,7 +248,7 @@ Reading an object is not that different from reading an array. First we define a
 
 And here's `read-left-brace`. Note that this function also relies on `read-next-object` to get the bulk of its work done.
 
-```lisp
+```cl
 (defun read-left-brace (stream char)
   (declare (ignore char))
   (let ((*readtable* (copy-readtable)))
@@ -266,7 +266,7 @@ And here's `read-left-brace`. Note that this function also relies on `read-next-
 
 Finally, we also associate right brace with a macro function.
 
-```lisp
+```cl
 (set-macro-character +right-brace+ 'read-delimiter)
 ```
 
@@ -296,7 +296,7 @@ The generated sexp:
 
 Our JSON reader can handle numbers, strings, objects and arrays fairly well. However, it can still not handle three primitives in JSON -- `true`, `false`, and `null`. This is fairly easy to fix. When the reader encounters these JSON primitives, it interprets them as Lisp symbols. All we have to do is transform these into an appropriate Lisp value. To this end, we define a function `transform-primitive`.
 
-```lisp
+```cl
 (defun transform-primitive (value)
   (if (symbolp value)
       (cond
@@ -311,7 +311,7 @@ Our JSON reader can handle numbers, strings, objects and arrays fairly well. How
 
 We can start using `transform-primitive` in our reader macro functions now.
 
-```lisp
+```cl
 (defun read-left-bracket (stream char)
   (declare (ignore char))
   (let ((*readtable* (copy-readtable)))
@@ -357,7 +357,7 @@ A look at the generated sexp makes clear why we get the runtime thinks `foo` is 
 
 This is also easy to fix using the `stringify-key` function.
 
-```lisp
+```cl
 (defun stringify-key (key)
   (etypecase key
     (symbol (string-downcase (string key)))
@@ -398,7 +398,7 @@ Again, this is not very hard to fix. I will leave that as an exercise to the rea
 
 Apart from creating new functions, we also directly change the current readtable when associating macro functions with characters:
 
-```lisp
+```cl
 (set-macro-character +left-bracket+ 'read-left-bracket)
 (set-macro-character +right-bracket+ 'read-delimiter)
 (set-macro-character +left-brace+ 'read-left-brace)
@@ -409,7 +409,7 @@ If we were to package the JSON reader in a library and add these lines as toplev
 
 So instead of adding these as toplevel forms, we could provide them inside a function:
 
-```lisp
+```cl
 (defun enable-json-syntax ()
   (set-macro-character +left-bracket+ 'read-left-bracket)
   (set-macro-character +right-bracket+ 'read-delimiter)
@@ -421,7 +421,7 @@ Now, when users want to enable JSON syntax from the REPL, they could simply call
 
 Enabling this syntax inside a source file is a bit trickier. Let's assume we write our file like this:
 
-```lisp
+```cl
 ;;; foo.lisp
 
 (in-package #:foobar)
@@ -436,7 +436,7 @@ Consider what happens when this file is loaded using `(load (compile-file "foo.l
 
 Remember that reader macros only work at read-time i.e. when the reader is translating raw text into Lisp s-expressions. In the example above, the definition for `foobar` was translated from raw text to sexp during [`COMPILE-FILE`][compile-file] and not [`LOAD`][load]. So what we really want is to run `enable-json-syntax` during `COMPILE-FILE` instead of `LOAD`. The simplest way to achieve this is to wrap the function call inside an [`EVAL-WHEN`][eval-when]:
 
-```lisp
+```cl
 ;;; foo.lisp
 
 (in-package #:foobar)
@@ -458,7 +458,7 @@ However, this still suffers from two problems:
 
 Both these problems are solved by making a slight modification to `enable-json-syntax`.
 
-```lisp
+```cl
 (defvar *previous-readtables* nil)
 
 (defun enable-json-syntax ()
@@ -474,7 +474,7 @@ We maintain a stack of previous readtables. When `enable-json-syntax` is called,
 
 Now we can provide a simple way to disable JSON syntax.
 
-```lisp
+```cl
 (defun disable-json-syntax ()
   (setq *readtable* (pop *previous-readtables*)))
 ```
@@ -485,7 +485,7 @@ This solves the first problem, but what about the second? Due to an interesting 
 
 Finally, it might be a bit cumbersome for your users to write `(eval-when (:compile-toplevel :load-toplevel ...))` all the time, so we could redefine these functions as macros.
 
-```lisp
+```cl
 (defmacro enable-json-syntax ()
   '(eval-when (:compile-toplevel :load-toplevel :execute)
     (push *readtable* *previous-readtables*)
@@ -502,7 +502,7 @@ Finally, it might be a bit cumbersome for your users to write `(eval-when (:comp
 
 Your users can now enable/disable JSON syntax at will using these two macros. As long as calls to `enable-json-syntax` and `disable-json-syntax` are balanced, this will work well both on the REPL and in a source file. For reference, here's how a user source file might look with these definitions in place:
 
-```lisp
+```cl
 ;;; foo.lisp
 
 (in-package #:foobar)
