@@ -8,7 +8,7 @@ twitter_username: chaitanya_gupta
 github_username:  chaitanyagupta
 
 # Build settings
-markdown: redcarpet
+markdown: kramdown
 
 redcarpet:
   extensions: [with_toc_data, footnotes]
