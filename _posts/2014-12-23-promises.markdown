@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Promises and Lisp"
-permalink: /promises
+permalink: /promises/
 ---
 
 While I had seen promises before, I didn't really understand their
