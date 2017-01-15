@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Reader Macros in Common Lisp"
-permalink: /reader-macros/
+permalink: /reader-macros
 ---
 
 _This post originally appeared as a [github gist][]._
