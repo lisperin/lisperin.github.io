@@ -23,7 +23,6 @@ I'll attempt to show how effective CL's condition system can be, with a validato
 * [Starting all over again](#starting-all-over-again)
 * [Handling restarts](#handling-restarts)
 * [Conclusion](#conclusion)
-* [Notes](#notes)
 
 ## The CSV
 
