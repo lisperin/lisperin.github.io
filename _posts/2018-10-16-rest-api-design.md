@@ -70,7 +70,23 @@ Some services allow sending the access token as a query parameter. I **DON'T** r
 
 We already allow users to send GET requests in the browser, but we can do much better.
 
-* Link to various relations of the resource in your API response. For example, when looking at a post, provide an API URL[^1] in the response that allows one to get a list of comments[^2].
+* Link to various relations of the resource in your API response. For example, when looking at a post, provide an API link[^1] in the response that allows one to get a list of comments for that post.[^2]
+    ```
+    # Request
+    GET /posts/1?accept=json&v=1
+    Host: api.example.com
+
+    # Response
+    200 OK
+    {
+        id: 1,
+        title: "foo bar",
+        body: "...",
+        links: {
+            "comments": "https://api.example.com/posts/1/comments?accept=json&v=1
+        }
+    }
+    ```
 * Allow users to send `accept=pretty` instead of `accept=json` to get the same response, except it returns HTML which renders the JSON in a pretty way -- indented, syntax highlighted and with clickable links.
 
 This is fairly simple to implement but allows users to explore related API resources with just a click. Plus, since we use basic authentication, the credentials are cached automatically by the browser so the user doesn't need to provide them every time they follow a link.
