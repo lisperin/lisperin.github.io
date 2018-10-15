@@ -47,7 +47,7 @@ The same URLs are used for API requests. To do this,
 
 Personally I prefer the former since it allows one to test GET requests directly in the browser, something that I consider important.
 
-Note that for URLs of type `api.example.com/collection/:id`, `:id` should obviously be a real id in the database when making an API request; when viewing documentation it can be anything (though the recommended convention is to use the literal string `:id` when you don't have a real one).
+Note that for URLs of type `api.example.com/collection/:id`, `:id` should obviously be a real id in the database when making an API request; when viewing documentation it can be anything.
 
 ### Versioning
 
@@ -56,28 +56,26 @@ By default, the above calls will return the latest API version (both for documen
 1. Either use a query parameter like `v=1` in the URL (and like `accept=json` it can be sent in the POST body too).
 2. Or use vendor mime types: `Accept: application/vnd.api.v1+json`
 
-Again, I personally prefer the former because of ease of use in the browser.
+Again, I prefer the former because of its ease of use in the browser.
 
-So if you wanted to see documentation for a resource at a particular version, just use: `api.example.com/resource?v=1`. The corresponding GET API URL becomes `api.example.com/resource?accept=json&v=1`.
+So if you wanted to see documentation for a resource at a particular version, just use: `api.example.com/resource?v=1`. The corresponding API URL becomes `api.example.com/resource?accept=json&v=1`.
 
 ## Authentication
 
 Besides bearer authentication, I also recommend supporting basic authentication because of its support in the browser. Go with username and password, or if you only want to support access tokens, use `bearer` as the username and the access token as the password. This, again, ensures that GET requests can be easily tested in the browser.
 
-Some services support sending the access token as a query parameter too. I **don't** recommend doing this though. That's because an access token is sensitive data, but unfortunately query parameters are included by default in almost all HTTP logs. Its becomes very easy to leak access tokens this way. Use basic authentication instead.
+Some services allow sending the access token as a query parameter. I **DON'T** recommend doing this. That's because an access token is sensitive data, but unfortunately query parameters are included by default in almost all HTTP logs. You might also inadvertently share an API URL with your access token in it. Use basic authentication instead, its much safer.
 
 ## API Explorer
-
-An API explorer allows one to test the API right in the browser. It is not trivial to implement, but if done well can make life much easier for developers using your API.
 
 We already allow users to send GET requests in the browser, but we can do much better.
 
 * Link to various relations of the resource in your API response. For example, when looking at a post, provide an API URL[^1] in the response that allows one to get a list of comments[^2].
 * Allow users to send `accept=pretty` instead of `accept=json` to get the same response, except it returns HTML which renders the JSON in a pretty way -- indented, syntax highlighted and with clickable links.
 
-This is fairly simple to implement but allows users to explore related API resources very easily. Plus, since we use basic authentication, the credentials are cached automatically by the browser so we don't need to provide them every time we visit a new link. 
+This is fairly simple to implement but allows users to explore related API resources with just a click. Plus, since we use basic authentication, the credentials are cached automatically by the browser so the user doesn't need to provide them every time they follow a link.
 
-That said, this exploration is limited only to GET requests. If you want a full fledged API explorer, you can instead use something like `api.example.com/resource?explore=true` which lists all the supported methods for the given resource and allows the user to test any of them. Granted, this is not a trivial exercise, but at least the discovery of your API explorer becomes trivial.
+That said, this exploration is limited only to GET requests. If you want a full fledged API explorer, you can instead provide something like `api.example.com/resource?explore=true` which lists all the supported methods for the given resource and allows the user to test any of them. Granted, this is not a trivial exercise, but at least the discovery of your API explorer becomes trivial.
 
 ## Conclusion
 
