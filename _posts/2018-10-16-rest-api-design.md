@@ -20,7 +20,7 @@ Versioning is usually handled in one of two ways:
 1. As part of the path e.g. `api.example.com/v1/`
 2. Using vendor MIME types i.e. sending something like `Accept: application/vnd.api.v1+json` in the request headers
 
-All of this works, however it takes a bit of time to discover. You have to find the API docs, then figure out the endpoint, authentication, versioning, etc. Moreover, unless you have an API explorer, trying out an actual response takes even longer (figure out the right `curl` incancation or something similar). Testing even GET requests in the browser is really hard with many APIs.
+All of this works, however it takes a bit of time to figure out. You have to find the API docs, then figure out the endpoint, authentication, versioning, etc. Moreover, unless you have an API explorer, trying out an actual response takes even longer (figure out the right `curl` incancation or something similar). Testing even GET requests in the browser is really hard with many APIs.
 
 This document proposes a small set of conventions to make working with REST APIs (discovery, testing and exploration) a little bit easier.
 
