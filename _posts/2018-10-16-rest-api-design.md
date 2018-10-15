@@ -9,9 +9,9 @@ permalink: /rest-api-design
 
 ## Introduction
 
-Let's say you've setup a brand new webapp at `example.com` and want to expose a REST API. How do you design the URLs for API calls and documentation? How do you handle versioning?
+Let's say you've setup a brand new webapp at `example.com` and want to expose a REST API. How do you design the URLs for API requests and documentation? How do you handle versioning?
 
-One popular option is to use `api.example.com` for the actual calls, another endpoint for documentation, and possibly a third endpoint for an API explorer (if it exists).
+One popular option is to use `api.example.com` for API requests, another endpoint for documentation, and possibly a third endpoint for an API explorer (if it exists).
 
 For authentication, the preferred option it seems is to generate an API key or get an OAuth access token, then send it using bearer authorization in the request: `Authorization: Bearer <access_token>`
 
