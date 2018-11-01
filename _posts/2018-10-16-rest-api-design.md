@@ -4,6 +4,10 @@ title: Design, documentation and exploration of REST APIs
 permalink: /rest-api-design
 ---
 
+*Updated:* Nov 1, 2018
+
+*Note:* This is a living document -- I update it occasionally as my thinking around this scheme evolves.
+
 * Replace with TOC
 {:toc}
 
@@ -40,40 +44,26 @@ As you can see, for any given resource on `example.com`, to check its documentat
 
 ### API requests
 
-The same URLs are used for API requests. To do this,
+The same URLs are used for API requests. However, one needs to append the API version as a query parameter in the URL to make the API request. So,
 
-1. Either use the query parameter `accept=json` in the URL (for URL encoded or multipart POST requests this param can optionally be sent in the body instead),
-2. Or use the header `Accept: application/json` in the request
+* `api.example.com/resource?v=1` will be used send an API request for `example.com/resource` at API version 1.
 
-Personally I prefer the former since it allows one to test GET requests directly in the browser, something that I consider important.
+Note that for URLs of type `api.example.com/collection/:id?v=1`, `:id` should obviously be a real id in the database when making an API request; when viewing documentation it can be anything.
 
-Note that for URLs of type `api.example.com/collection/:id`, `:id` should obviously be a real id in the database when making an API request; when viewing documentation it can be anything.
+This scheme, combined with basic authentication as explained below, means that a user can easily explore your API using GET requests in the browser itself.
 
-### Versioning
+### Documentation for Older Versions
 
-By default, the above calls will return the latest API version (both for documentation and API calls). Switching to another version is easy:
+Specify the version value alongwith `show=doc` to show documentation for an older version. For example: `api.example.com/resource?v=1&show=doc`.
 
-1. Either use a query parameter like `v=1` in the URL (and like `accept=json` it can be sent in the POST body too).
-2. Or use vendor mime types: `Accept: application/vnd.api.v1+json`
-
-Again, I prefer the former because of its ease of use in the browser.
-
-So if you wanted to see documentation for a resource at a particular version, just use: `api.example.com/resource?v=1`. The corresponding API URL becomes `api.example.com/resource?accept=json&v=1`.
-
-## Authentication
-
-Besides bearer authentication, I also recommend supporting basic authentication because of its support in the browser. Go with username and password, or if you only want to support access tokens, use `bearer` as the username and the access token as the password. This, again, ensures that GET requests can be easily tested in the browser.
-
-Some services allow sending the access token as a query parameter. I **DON'T** recommend doing this. That's because an access token is sensitive data, but unfortunately query parameters are included by default in almost all HTTP logs. You might also inadvertently share an API URL with your access token in it. Use basic authentication instead, its much safer.
-
-## API Explorer
+### API Explorer
 
 We already allow users to send GET requests in the browser, but we can do much better.
 
-* Link to various relations of the resource in your API response. For example, when looking at a post, provide an API link[^1] in the response that allows one to get a list of comments for that post.[^2]
+1. Link to various relations of the resource in your API response. For example, when looking at a post, provide an API link in the response that allows one to get a list of comments for that post.[^1]
     ```
     # Request
-    GET /posts/1?accept=json&v=1
+    GET /posts/1?v=1
     Host: api.example.com
 
     # Response
@@ -83,15 +73,21 @@ We already allow users to send GET requests in the browser, but we can do much b
         title: "foo bar",
         body: "...",
         links: {
-            "comments": "https://api.example.com/posts/1/comments?accept=json&v=1
+            "comments": "https://api.example.com/posts/1/comments?v=1
         }
     }
     ```
-* Allow users to send `accept=pretty` instead of `accept=json` to get the same response, except it returns HTML which renders the JSON in a pretty way -- indented, syntax highlighted and with clickable links.
+2. Allow users to send `show=pretty` alongwith the version to get the same response, except it returns HTML which renders the JSON in a pretty way -- indented, syntax highlighted and with clickable links.
 
 This is fairly simple to implement but allows users to explore related API resources with just a click. Plus, since we use basic authentication, the credentials are cached automatically by the browser so the user doesn't need to provide them every time they follow a link.
 
-That said, this exploration is limited only to GET requests. If you want a full fledged API explorer, you can instead provide something like `api.example.com/resource?explore=true` which lists all the supported methods for the given resource and allows the user to test any of them. Granted, this is not a trivial exercise, but at least the discovery of your API explorer becomes trivial.
+That said, this exploration is limited only to GET requests. If you want a full fledged API explorer, you can instead provide something like `api.example.com/resource?show=explorer` which lists all the supported methods for the given resource and allows the user to test any of them.
+
+## Authentication
+
+Besides bearer authentication, I also recommend supporting basic authentication because of its support in the browser. Go with username and password, or if you only want to support access tokens, use `bearer` as the username and the access token as the password. This, again, ensures that GET requests can be easily tested in the browser.
+
+Some services allow sending the access token as a query parameter. I **DON'T** recommend doing this. That's because an access token is sensitive data, but unfortunately query parameters are included by default in almost all HTTP logs. You might also inadvertently share an API URL with your access token in it. Use basic authentication instead, its much safer.
 
 ## Conclusion
 
@@ -106,6 +102,4 @@ Also, for any resource under `example.com`, allow users to reach the API documen
 
 ----
 
-[^1]: Ensure that URLs of relations include the current API version and `accept=json` in query parameters. Otherwise linking to them (covered in the next point), won't do any good.
-
-[^2]: H/T [@rakesh314](https://twitter.com/rakesh314)
+[^1]: H/T [@rakesh314](https://twitter.com/rakesh314)
