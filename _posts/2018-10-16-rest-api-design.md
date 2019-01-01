@@ -4,9 +4,12 @@ title: Design, documentation and exploration of REST APIs
 permalink: /rest-api-design
 ---
 
-*Updated:* Nov 1, 2018
+<small>(Updated Nov 1, 2018)</small>
 
-*Note:* This is a living document -- I update it occasionally as my thinking around this scheme evolves.
+*Note:* The ideas explored in this document have more or less been implemented for [deftask][]. Go to [api.deftask.com][] to see it in aciton.
+
+[deftask]: https://deftask.com
+[api.deftask.com]: https://api.deftask.com
 
 * Replace with TOC
 {:toc}
