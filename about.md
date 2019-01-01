@@ -30,7 +30,7 @@ this site is hosted on [lisper.in][].
 
 [deftask]: https://deftask.com
 [PM Tracker]: https://pmtracker.in
-[Directi]: https://directi.com
+[Directi]: http://directi.com
 [Flock]: https://flock.com
 [Ringo]: https://www.ringo.co/
 [Cleartrip]: https://cleartrip.com
