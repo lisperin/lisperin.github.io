@@ -110,15 +110,15 @@ The various subclasses of `TAG` are:
 * [`SEPARATOR`][separator] – Things like slash "/", dash "-", "in", "at", "on",
   etc.
 * [`ORDINAL`][ordinal] – Numbers like 1st, 2nd, 3rd, etc.
-* [`SCALAR`][scalar] – Simple numbers like 1, 5, 10, etc. It is further subclassed by
-   `SCALAR-DAY` (1-31), `SCALAR-MONTH` (1-12) and `SCALAR-YEAR`. A token for any
-   number will usually contain the SCALAR tag plus one or more of the subclassed
-   tags as applicable.
-* [`POINTER`][pointer] – Indicates whether we are looking forwards (hence,
-   after, from) or backwards (ago, before). These words are normalized to future
-   and past before they are tagged.
-* [`GRABBER`][grabber] – The terms this, last or next (as in this month or last
-  month).
+* [`SCALAR`][scalar] – Simple numbers like 1, 5, 10, etc. It is further
+   subclassed by `SCALAR-DAY` (1-31), `SCALAR-MONTH` (1-12) and `SCALAR-YEAR`. A
+   token for any number will usually contain the SCALAR tag plus one or more of
+   the subclassed tags as applicable.
+* [`POINTER`][pointer] – Indicates whether we are looking forwards ("hence",
+   "after", "from") or backwards ("ago", "before"). These words are normalized
+   to "future" and "past" before they are tagged.
+* [`GRABBER`][grabber] – The terms "this", "last" and "next" (as in this month
+  or last month).
 * [`REPEATER`][repeater] – Most of the date and time terms are tagged using this
    class. This is described in more detail below.
 
@@ -132,10 +132,10 @@ The various subclasses of `TAG` are:
 There are a number of [subclasses][repeater-subclasses] of `REPEATER` to
 indicate the numerous date and time terms. For example:
 
-* Unit names like year, month, week, day, etc., use the subclasses
+* Unit names like "year", "month", "week", "day", etc., use the subclasses
    `REPEATER-YEAR`, `REPEATER-MONTH`, `REPEATER-WEEK`, `REPEATER-DAY`.
-* `REPEATER-MONTH-NAME` is used to indicate month names like jan or january.
-* `REPEATER-DAY-NAME` indicates day names like monday.
+* `REPEATER-MONTH-NAME` is used to indicate month names like "jan" or "january".
+* `REPEATER-DAY-NAME` indicates day names like "monday".
 * `REPEATER-TIME` is used to indicate time strings like 20:00.
 * Parts of the day like AM, PM, morning, evening use the subclass
    `REPEATER-DAY-PORTION`.
