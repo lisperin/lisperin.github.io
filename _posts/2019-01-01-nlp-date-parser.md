@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Writing a natural language date parser"
+title: "Writing a natural language date and time parser"
 permalink: /nlp-date-parser
 ---
 
