@@ -4,7 +4,7 @@ title: "Writing a natural language date and time parser"
 permalink: /nlp-date-parser
 ---
 
-In the [deftask](https://deftask.com) blog I described how it allow users to
+In the [deftask](https://deftask.com) blog I described how it lets users 
 search for tasks easily [by using natural language date
 queries](https://blog.deftask.com/why-are-date-based-searches-so-hard/). It
 accomplishes this by using a natural language date and time parser I wrote a
