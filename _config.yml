@@ -14,14 +14,3 @@ author:
 # Build settings
 markdown: kramdown
 highlighter: rouge
-
-# Plugins
-plugins:
-  - jekyll-feed
-
-# Feeds
-feed:
-  categories:
-    - lisp
-
-# Random comment to trigger a build
