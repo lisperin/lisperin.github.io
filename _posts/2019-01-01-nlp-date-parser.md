@@ -2,6 +2,7 @@
 layout: post
 title: "Writing a natural language date and time parser"
 permalink: /nlp-date-parser
+category: lisp
 ---
 
 In the [deftask](https://deftask.com) blog I described how it lets users 

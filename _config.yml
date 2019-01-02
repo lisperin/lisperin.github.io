@@ -3,10 +3,23 @@ title: Lisper.in
 email: mail@chaitanyagupta.com
 description: Essays on programming, technology and other things
 baseurl: ""
-url: "http://lisper.in"
+url: https://lisper.in
 twitter_username: chaitanya_gupta
 github_username:  chaitanyagupta
+author:
+  name: Chaitanya Gupta
+  email: mail@chaitanyagupta.com
+  uri: https://lisper.in
 
 # Build settings
 markdown: kramdown
 highlighter: rouge
+
+# Plugins
+plugins:
+  - jekyll-feed
+
+# Feeds
+feed:
+  categories:
+    - lisp

@@ -2,6 +2,7 @@
 layout: post
 title:  "Reader Macros in Common Lisp"
 permalink: /reader-macros
+category: lisp
 ---
 
 _This post originally appeared as a [github gist][]._

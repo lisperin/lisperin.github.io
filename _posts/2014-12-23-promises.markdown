@@ -2,6 +2,7 @@
 layout: post
 title:  "Promises and Lisp"
 permalink: /promises
+category: lisp
 ---
 
 While I had seen promises before, I didn't really understand their
