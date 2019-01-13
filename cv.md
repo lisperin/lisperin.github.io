@@ -9,23 +9,16 @@ style: davewhipp
 
 <div id="webaddress">
 <span class="icon-envelope"></span> <a href="mailto:mail@chaitanyagupta.com">mail@chaitanyagupta.com</a>
-<br>
-<span class="icon-chain"></span> <a href="https://lisper.in">lisper.in</a>
 </div>
 
 ## Summary
 
-I am a software developer with more than 12 years of work experience. My
-experience ranges from working as a junior developer to managing a large team
-of developers. I have worked on various technology platforms and programming
-languages, including Common Lisp, Javascript (both frontend and node.js),
-Objective-C (iOS development), C and Java. In addition, I have spent a
-significant amount of my time hiring and scaling up technology teams from the
-ground up.
-
-<span class="icon-github"></span> <a href="https://github.com/chaitanyagupta">Github</a>
-<br>
-<span class="icon-linkedin"></span> <a href="https://www.linkedin.com/in/chaitanyagupta">Linkedin</a>
+I am a software developer with over 12 years of work experience -- ranging from
+a junior developer to managing a large team of developers. I have worked on
+various technology platforms including Common Lisp, Javascript (both frontend
+and node.js), Objective-C (iOS development), C and Java. In addition, I have
+spent a significant amount of my time hiring and scaling up technology teams
+from the ground up.
 
 ## Work History
 
@@ -72,22 +65,36 @@ __Developer, Tech Lead__
 
 [Cleartrip]: https://cleartrip.com
 
-## Writings
+## Other
 
-I write about programming and technology, usually on [lisper.in][]. Some of the
-essays I've written are listed below:
+### Projects
+
+[__PM Tracker__](https://pmtracker.in)
+
+See where the Indian Prime Minister has travelled recently
+
+### Open Source
+
+__Github__
+
+* <span class="icon-github" title="github"></span> [chaitanyagupta](https://github.com/chaitanyagupta)
+
+### Written Works
+
+[__lisper.in__](https://lisper.in)
+
+I write about programming and technology. Some of the essays I've written are:
 
 * [Writing a natural language date and time parser](https://lisper.in/nlp-date-parser)
 * [Design, documentation and exporation of REST APIs](https://lisper.in/rest-api-design)
 * [Reader macros in Common Lisp](https://lisper.in/reader-macros)
 * [Conditions and Restarts in Common Lisp](https://lisper.in/restarts)
 
-[lisper.in]: https://lisper.in
-
 ## Education
 
 ### B.E.
 
-* `2002 - 2006`
-* _Branch:_ Electronics and Communication
-* _College:_ Thapar Institute of Engineering and Technology, Patiala
+__Electronics and Communication__
+`2002 - 2006`
+
+* Thapar University, Patiala
