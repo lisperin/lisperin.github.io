@@ -2,7 +2,6 @@
 layout: cv
 title: Chaitanya Gupta
 permalink: /cv
-style: davewhipp
 ---
 
 # Chaitanya Gupta
@@ -13,12 +12,15 @@ style: davewhipp
 
 ## Summary
 
-I am a software developer with over 12 years of work experience -- ranging from
-a junior developer to managing a large team of developers. I have worked on
-various technology platforms including Common Lisp, Javascript (both frontend
-and node.js), Objective-C (iOS development), C and Java. In addition, I have
-spent a significant amount of my time hiring and scaling up technology teams
-from the ground up.
+With over 12 years of experience -- ranging from junior developer to managing a
+large technology team -- I bring a diverse set of skills to the table. I can
+help bootstrap new projects, grow and mentor a team of developers, or help in
+managing large projects.
+
+I have worked on various technology platforms including Common Lisp, Javascript
+(both frontend and node.js), Objective-C (iOS), C and Java. In
+addition, I have spent a significant amount of my time hiring for and scaling up
+technology teams.
 
 ## Work History
 
@@ -27,8 +29,8 @@ from the ground up.
 __Founder__
 `Jan 2018 onwards`
 
-* designed, developed and maintain the service
-* developed using Common Lisp, PostgreSQL, Javascript and Bootstrap
+* Designed, developed and maintain the service
+* Developed using Common Lisp, PostgreSQL, Javascript and Bootstrap
 
 [deftask]: https://deftask.com
 
@@ -46,9 +48,9 @@ __Developer, Tech Lead, CTO__
   the flock app store, designed the API and the developer portal, conceptualized
   and managed product development for the github app among other things. Later
   served as the CTO of Flock.
-* Developed a proprietary alternative to TLS which was meant to reduce the
-  number of round-trips required for handshake. At that time, alternatives like
-  QUIC (which later became TLS 1.3) were quite immature.
+* Developed a proprietary alternative to TLS meant to reduce the number of
+  round-trips required for handshake. At that time, alternatives like QUIC
+  (which later became TLS 1.3) were quite immature.
 
 [Directi]: http://directi.com
 [Ringo]: https://www.ringo.co
@@ -59,27 +61,36 @@ __Developer, Tech Lead, CTO__
 __Developer, Tech Lead__
 `Jul 2006 - Sep 2008`
 
-* Worked on the flight search and booking backend at [Cleartrip][] (initially as
-  junior dev and later as tech lead).
+* Worked on the flight search and booking backend at Cleartrip, written in
+  Common Lisp.
 * Designed and documented the REST API for flights
 
 [Cleartrip]: https://cleartrip.com
 
 ## Other
 
-### Projects
+### Software
 
 [__PM Tracker__](https://pmtracker.in)
 
-See where the Indian Prime Minister has travelled recently
+See where the Indian Prime Minister has travelled recently.
 
-### Open Source
+__Open Source__
 
-__Github__
+I maintain a few open source projects on
+[Github](https://github.com/chaitanyagupta). A select few are listed below:
 
-* <span class="icon-github" title="github"></span> [chaitanyagupta](https://github.com/chaitanyagupta)
+* [chronicity][] -- Natural language date and time parser in Common Lisp
+* [qbase64][] -- Fast and flexible base64 encoder/decoder in Common Lisp
+* [XCDataModelPrinter][] -- Textual representation of xcdatamodel files used in
+  Core Data (Cocoa framework). Used for viewing the diff between two different
+  Core Data schemas.
 
-### Written Works
+[chronicity]: https://github.com/chaitanyagupta/chronicity
+[qbase64]: https://github.com/chaitanyagupta/qbase64
+[XCDataModelPrinter]: https://github.com/chaitanyagupta/XCDataModelPrinter
+
+### Essays
 
 [__lisper.in__](https://lisper.in)
 
