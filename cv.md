@@ -24,20 +24,24 @@ technology teams.
 
 ## Work History
 
-### [deftask][]
+### deftask
 
 __Founder__
 `Jan 2018 onwards`
+
+<span class="icon-link"></span> [deftask.com][deftask]
 
 * Designed, developed and maintain the service
 * Developed using Common Lisp, PostgreSQL, Javascript and Bootstrap
 
 [deftask]: https://deftask.com
 
-### [Directi][]
+### Directi
 
 __Developer, Tech Lead, CTO__
 `Apr 2009 - Nov 2017`
+
+<span class="icon-link"></span> [directi.com][Directi]
 
 * chat.pw - instant messaging software. Worked on frontend Javascript.
 * talk.to - (renamed from chat.pw) Led development of the iOS app for around
@@ -56,10 +60,12 @@ __Developer, Tech Lead, CTO__
 [Ringo]: https://www.ringo.co
 [Flock]: https://flock.com
 
-### [Cleartrip][]
+### Cleartrip
 
 __Developer, Tech Lead__
 `Jul 2006 - Sep 2008`
+
+<span class="icon-link"></span> [cleartrip.com][Cleartrip]
 
 * Worked on the flight search and booking backend at Cleartrip, written in
   Common Lisp.
@@ -69,16 +75,11 @@ __Developer, Tech Lead__
 
 ## Other
 
-### Software
-
-[__PM Tracker__](https://pmtracker.in)
-
-See where the Indian Prime Minister has travelled recently.
-
 __Open Source__
 
-I maintain a few open source projects on
-[Github](https://github.com/chaitanyagupta). A select few are listed below:
+<span class="icon-github"></span> [chaitanyagupta](https://github.com/chaitanyagupta)
+
+I maintain a few open source projects on Github. A select few are listed below:
 
 * [chronicity][] -- Natural language date and time parser in Common Lisp
 * [qbase64][] -- Fast and flexible base64 encoder/decoder in Common Lisp
@@ -90,9 +91,9 @@ I maintain a few open source projects on
 [qbase64]: https://github.com/chaitanyagupta/qbase64
 [XCDataModelPrinter]: https://github.com/chaitanyagupta/XCDataModelPrinter
 
-### Essays
+__Essays__
 
-[__lisper.in__](https://lisper.in)
+<span class="icon-link"></span> [lisper.in](https://lisper.in)
 
 I write about programming and technology. Some of the essays I've written are:
 
