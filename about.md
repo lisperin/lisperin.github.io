@@ -9,9 +9,6 @@ Hi, my name is Chaitanya Gupta and I make software for a living.
 These days I am building [deftask][] which aims to make task management painless
 for teams.
 
-A side project of mine is [PM Tracker][] which shows at a glance where the
-Indian Prime Minister has travelled recently.
-
 In the past, I have worked at 
 
 * [Directi][] (2009-17) -- several products including [Flock][] and [Ringo][].
