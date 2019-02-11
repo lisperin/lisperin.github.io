@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Easier prepared queries in Postmodern with LOAD-TIME-VALUE
+title: LOAD-TIME-VALUE and prepared queries in Postmodern
 permalink: /load-time-value
 category: lisp
 ---
