@@ -76,14 +76,14 @@ Some example (SHA-1) hashes are shown below:
 | _the quick brown fox jumped over the lazy dog_ | `3e4991b48bcb1bd9d3c4c14a1f24c415deaba466` |
 |------------------------------------------------+--------------------------------------------|
 
-The important things to know about cryptographic hashes are:
+A few important properties of cryptographic hashes are:
 
 1. It is extremely easy to calculate the hash of any text
 2. It is extremely difficult to find a text that has a given hash
 3. If you have a text and its hash, it is extremely difficult to find another
    text that has the same hash.
 
-Also, as the third and fourth examples show, even a slight change in text input
+Also, as the second and third examples show, even a slight change in text input
 usually leads to large changes in the output hash.
 
 So, while it's very easy to calculate the hash of the string "The quick brown
@@ -192,15 +192,11 @@ to carry out a brute force attack decreases:
   (which specializes in computing hashes at a high speed) will take a few days
   to crack the result.
 
-* At 1000 voters and 15 candidates, one can be fairly confident that not even a
-  nation-state cannot brute force their way to the result.
+* At 1000 voters and 15 candidates, one can be fairly confident that even a
+  nation-state cannot brute force their way to the result anytime soon.
 
-Generally, for a polling station with _n_ voters and _k_ candidates, the number
-of permutations of the result is <a
-href="https://en.wikipedia.org/wiki/Stars_and_bars_(combinatorics)"><sup>n+k-1</sup>C<sub>k-1</sub></a>.
-
-So cryptographic hash functions alone are not sufficient to protect the secrecy
-of election results. How do we fix this?
+All said and done, cryptographic hash functions alone are not sufficient to
+protect the secrecy of election results. How do we fix this?
 
 ### Randomization
 
@@ -273,3 +269,43 @@ Unfortunately, only a small subset of paper votes are counted and tallied with
 the EVM result. If all the paper based votes were to be counted, that combined
 with a verifiable digital fingerprint of the result will, in my opinion, go a
 long way towards assuring the public about the sanctity of the polling process.
+
+## Addendum: Analysis of brute force attacks
+
+_A more technical analysis of the efficacy of brute force attacks_
+
+For a polling station with _n_ voters and _k_ candidates, the number of
+different permutations of the result is <sup>n+k-1</sup>C<sub>k-1</sub>. The
+[stars and bars](https://en.wikipedia.org/wiki/Stars_and_bars_(combinatorics))
+method proves this theorem.
+
+* For 50 voters and 2 candidates, <sup>50</sup>C<sub>2</sub> = 51 different
+  results
+* For 100 voters and 5 candidates, <sup>100</sup>C<sub>5</sub> = 4598126
+  different results
+* For 600 voters and 10 candidates, there are 29922628655119426996 results
+* For 1000 voters and 15 candidates, there are 12734260985725567134324924085926
+  results
+
+How powerful a computer would you need to crack these results?
+
+* Clearly 51 hashes can easily be cracked by any computing device.
+* Commodity desktop hardware [can generally compute upto a few million hashes
+  per
+  second](https://en.bitcoin.it/wiki/Non-specialized_hardware_comparison#CPUs.2FAPUs). This
+  is good enough to crack the result for 100 voters and 5 candidates in a few
+  seconds.
+* At 600 voters and 10 candidates, we get into quintillions of hashes. Commodity
+  hardware is no match for this. However today's [most powerful bitcoin mining
+  hardware](https://www.asicminervalue.com/) can compute more than 50 trillion
+  hashes per second. At this rate it will take a bitcoin miner around a week to
+  crack the result. Well within the reach of individuals, forget nation states.
+* At 1000 voters and 15 candidates though, the number is so huge that even if
+  you had the peak hash rate of [the entire bitcoin
+  network](https://www.blockchain.com/en/charts/hash-rate) (60 million trillion
+  hashes per second) at your disposal, it would still take more than 6000 years
+  to crack the result.
+
+Finally, if you add a 128-bit random number in the mix, even with all the
+computation power of the bitcoin network, you would still need hundreds of
+billions of years to crack the result, well outside the realm of possibility.
