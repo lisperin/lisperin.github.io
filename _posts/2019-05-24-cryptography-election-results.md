@@ -52,13 +52,11 @@ not be able to match the disclosed fingerprint.
 
 ## How it works
 
-Next up are some details about how this works. Note that the sections below are
-slightly technical. You can skip this and jump to [concluding
-thoughts](#concluding-thoughts) for the remaining non-technical conclusions.
+The following sections get into the details of how this scheme works.
 
 ### Crytographic hash functions
 
-_(You can skip this section if you already know how they work)_
+_(Skip this section if you already know how they work)_
 
 A [cryptographic hash function][] is a mathematical construct that takes an
 input text of any length and mixes its bytes to produce a fixed size
@@ -69,23 +67,14 @@ Examples of such hash functions include MD5, SHA-1, SHA-3, etc.
 
 Some example (SHA-1) hashes are shown below:
 
-```
-|----------------------+------------------------------------------|
-| Text                 | Hash (SHA-1)                             |
-|----------------------+------------------------------------------|
-| abracadabra          | 0b8c31dd3a4c1e74b0764d5b510fd5eaac00426c |
-|----------------------+------------------------------------------|
-| lorem ipsum          | bfb7759a67daeb65410490b4d98bb9da7d1ea2ce |
-|----------------------+------------------------------------------|
-| the quick brown fox  | ced71fa7235231bed383facfdc41c4ddcc22ecf1 |
-|----------------------+------------------------------------------|
-| the quick brown fix  | e3a75de65fea42239e26476f6efe110f69932b8f |
-|----------------------+------------------------------------------|
-| the quick brown fox  | 3e4991b48bcb1bd9d3c4c14a1f24c415deaba466 |
-| jumped over the lazy |                                          |
-| dog                  |                                          |
-|----------------------+------------------------------------------|
-```
+|------------------------------------------------+--------------------------------------------|
+| Text                                           | Hash (SHA-1)                               |
+|------------------------------------------------+--------------------------------------------|
+| _abracadabra_                                  | `0b8c31dd3a4c1e74b0764d5b510fd5eaac00426c` |
+| _the quick brown fox_                          | `ced71fa7235231bed383facfdc41c4ddcc22ecf1` |
+| _the quick brown fix_                          | `e3a75de65fea42239e26476f6efe110f69932b8f` |
+| _the quick brown fox jumped over the lazy dog_ | `3e4991b48bcb1bd9d3c4c14a1f24c415deaba466` |
+|------------------------------------------------+--------------------------------------------|
 
 The important things to know about cryptographic hashes are:
 
@@ -176,24 +165,25 @@ So if someone wants to know the poll result beforehand, they can simply compute
 the hash for all 51 permutations of the result (i.e. create a [rainbow
 table](https://en.wikipedia.org/wiki/Rainbow_table)):
 
-```
-|--------+------------------------------------------|
-| Result | Hash                                     |
-|--------+------------------------------------------|
-| 0,50   | c87b42a20015ca36b3ee027a8e125c7a71e3d4f8 |
-| 1,49   | 151eaff1df5bbc8f0259d679047560b45740544e |
-| 2,48   | 1f5916b0dbfa228a07b7d6293aca31e0e1dd53d6 |
-| ...    |                                          |
-| 50,0   | 406840d6e2e9517378d13240b158c2cf843e8d67 |
-|--------+------------------------------------------|
-```
+|--------+--------------------------------------------|
+| Result | Hash                                       |
+|--------+--------------------------------------------|
+| _0,50_ | `c87b42a20015ca36b3ee027a8e125c7a71e3d4f8` |
+| _1,49_ | `151eaff1df5bbc8f0259d679047560b45740544e` |
+| _2,48_ | `1f5916b0dbfa228a07b7d6293aca31e0e1dd53d6` |
+| ...    |                                            |
+| _50,0_ | `406840d6e2e9517378d13240b158c2cf843e8d67` |
+|--------+--------------------------------------------|
 
 Now compare the hash provided by the EVM with the hashes in this table. The
-result is the one whose hash matches with the one provided by the EVM. This is
-known as the brute-force approach to cracking a hash.
+result is the one whose hash matches with the one provided by the EVM.
+
+In essence, you are not breaking the hash function, but since the number of
+possible inputs is small, you don't need to. You can simply compute the hash of
+every possible input.
 
 As the number of candidates and voters increase, the probability of being able
-to carry out a brute force attack becomes lower:
+to carry out a brute force attack decreases:
 
 * At 100 voters and 5 candidates, commodity hardware can crack the result in
   seconds.
@@ -208,11 +198,6 @@ to carry out a brute force attack becomes lower:
 Generally, for a polling station with _n_ voters and _k_ candidates, the number
 of permutations of the result is <a
 href="https://en.wikipedia.org/wiki/Stars_and_bars_(combinatorics)"><sup>n+k-1</sup>C<sub>k-1</sub></a>.
-
-Clearly, when the number of candidates and/or voters is low, it's fairly easy to
-calculate the result beforehand (even though nothing's wrong with the hash
-function itself -- this is known as a [side-channel
-attack](https://en.wikipedia.org/wiki/Side-channel_attack)).
 
 So cryptographic hash functions alone are not sufficient to protect the secrecy
 of election results. How do we fix this?
@@ -232,12 +217,12 @@ the randomly generated number `249825579` is also revealed alongwith the each
 candidate's vote count.
 
 What's a long enough random number? A 128-bit random number (i.e. a number
-picked at random from `2^128` possibilites) should be good enough. If a true
-128-bit random number is appended to every result text, no matter how low the
-number of voters/candidates are, the number of permutations is no less than
-`2^128`. This is big enough that even if you had the fastest supercomputer ever
-built at your disposal, earth itself will be incinerated by the sun before it
-can compute the result.
+picked at random from 2<sup>128</sup> possibilites) should be good enough. If a
+true 128-bit random number is appended to every result text, no matter how low
+the number of voters/candidates are, the number of permutations is no less than
+2<sup>128</sup>. This is big enough that even if you had the all the bitcoin
+mining hardware in the world at your disposal, Earth itself will be incinerated
+by the Sun before you can compute the result.
 
 The problem with random numbers, though, is that generating truly random numbers
 is hard. And it is impossible to generate them from software without an external
@@ -255,7 +240,7 @@ Is it feasible to do this today? Probably no.
 
 As discussed under randomization, EVMs most likely don't ship with a hardware
 based random number generator. So adopting this approach will likely require a
-hardware upgrade to the EVMs, besides firmware upgrades. That perhaps makes this
+hardware upgrade to the EVMs, besides firmware upgrades. This alone makes this
 scheme quite infeasible in the short term.
 
 ### Disclosure of voting patterns
