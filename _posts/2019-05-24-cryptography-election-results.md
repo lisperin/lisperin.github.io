@@ -43,7 +43,7 @@ during, the election. Nor cannot it solve the problem of [booth
 capture](https://en.wikipedia.org/wiki/Booth_capturing).
 
 It only focuses on securing one aspect of the polling process, and that is
-manipulation of election results after polling closes. In fact, it assumes that
+manipulation of election results after polling closes. In fact, it only works if
 EVMs have not been tampered with, and booth capture has not occurred.
 
 After disclosure of the digital fingerprint, which should be done as soon as
@@ -53,8 +53,8 @@ not be able to match the disclosed fingerprint.
 ## How it works
 
 Next up are some details about how this works. Note that the sections below are
-slightly technical. You can skip this and jump to [other
-caveats](#other-caveats) for the remaining non-technical conclusions.
+slightly technical. You can skip this and jump to [concluding
+thoughts](#concluding-thoughts) for the remaining non-technical conclusions.
 
 ### Crytographic hash functions
 
@@ -87,23 +87,22 @@ Some example (SHA-1) hashes are shown below:
 |----------------------+------------------------------------------|
 ```
 
-The important things to know about these hashes are:
+The important things to know about cryptographic hashes are:
 
 1. It is extremely easy to calculate the hash of any text
 2. It is extremely difficult to find a text that has a given hash
 3. If you have a text and its hash, it is extremely difficult to find another
    text that has the same hash.
 
-Also, as the third and fourth examples show, even a slight change in the text
-input usually leads to large changes in the output hash.
+Also, as the third and fourth examples show, even a slight change in text input
+usually leads to large changes in the output hash.
 
 So, while it's very easy to calculate the hash of the string "The quick brown
 fox jumps over the lazy dog", it is impossible to do the reverse -- if all you
-had was the hash `3e4991b48bcb1bd9d3c4c14a1f24c415deaba466`, you cannot find the
-string that resulted in this hash.
+had was the hash `3e4991b48bcb1bd9d3c4c14a1f24c415deaba466`, you won't be able
+to find the string that produced this hash.
 
-Moreover, it is impossible to find another string that has the same hash (try it
-if you are adventurous!)
+Moreover, it is impossible to find another string that has the same hash.
 
 Hash functions are also
 [deterministic](https://en.wikipedia.org/wiki/Deterministic_algorithm) i.e. they
@@ -190,25 +189,33 @@ table](https://en.wikipedia.org/wiki/Rainbow_table)):
 ```
 
 Now compare the hash provided by the EVM with the hashes in this table. The
-result is the one whose hash matches with the one provided by the EVM.
+result is the one whose hash matches with the one provided by the EVM. This is
+known as the brute-force approach to cracking a hash.
 
-As the number of candidates and voters increase the probability of being able to
-carry out a brute force attack on the result hash becomes lower. Generally, for
-a polling station with _n_ voters and _k_ candidates, the number of permutations
-of the result is <a
-href="https://math.stackexchange.com/questions/3237430/in-how-many-ways-can-the-votes-of-n-voters-be-split-among-k-candidates"><sup>n+k-1</sup>C<sub>k-1</sub></a>.
+As the number of candidates and voters increase, the probability of being able
+to carry out a brute force attack becomes lower:
+
+* At 100 voters and 5 candidates, commodity hardware can crack the result in
+  seconds.
+
+* At 600 voters and 10 candidates, the fastest bitcoin mining hardware around
+  (which specializes in computing hashes at a high speed) will take a few days
+  to crack the result.
+
+* At 1000 voters and 15 candidates, one can be fairly confident that not even a
+  nation-state cannot brute force their way to the result.
+
+Generally, for a polling station with _n_ voters and _k_ candidates, the number
+of permutations of the result is <a
+href="https://en.wikipedia.org/wiki/Stars_and_bars_(combinatorics)"><sup>n+k-1</sup>C<sub>k-1</sub></a>.
 
 Clearly, when the number of candidates and/or voters is low, it's fairly easy to
 calculate the result beforehand (even though nothing's wrong with the hash
 function itself -- this is known as a [side-channel
 attack](https://en.wikipedia.org/wiki/Side-channel_attack)).
 
-By my analysis, at around 1000 voters and 15 candidates is when you can be
-fairly confident that not even a nation-state cannot brute force their way to
-the result.
-
-Clearly, cryptographic hash functions alone are not sufficient to protect the
-secrecy of election results. Is there any way to fix this?
+So cryptographic hash functions alone are not sufficient to protect the secrecy
+of election results. How do we fix this?
 
 ### Randomization
 
@@ -238,7 +245,18 @@ source of randomness. Do the EVMs ship with a
 [component](https://en.wikipedia.org/wiki/Hardware_random_number_generator) that
 generates high quality random numbers? I think not.
 
-## Other caveats
+## Concluding thoughts
+
+### Feasibility
+
+Can this scheme work? Probably yes.
+
+Is it feasible to do this today? Probably no.
+
+As discussed under randomization, EVMs most likely don't ship with a hardware
+based random number generator. So adopting this approach will likely require a
+hardware upgrade to the EVMs, besides firmware upgrades. That perhaps makes this
+scheme quite infeasible in the short term.
 
 ### Disclosure of voting patterns
 
@@ -259,9 +277,14 @@ For it to work, it's the totalizer instead of the EVMs that needs to change.
 2. Random number and hash generation will happen in the totalizer after the
    results from these EVMs are added up.
 
-### Hardware Upgrade
+### Impact of VVPATs
 
-As discussed under randomization, EVMs most likely don't ship with a hardware
-based random number generator. So adopting this approach will require a hardware
-upgrade to the EVMs. Is it possible to make this change? Will it be cheap
-enough? That remains an open question.
+In recent years, the election commission introduced
+[VVPAT](https://en.wikipedia.org/wiki/Voter-verified_paper_audit_trail) based
+EVMs -- besides registering the vote electronically, VVPAT machines also print
+the vote on a paper, and store the paper votes in a sealed ballot box.
+
+Unfortunately, only a small subset of paper votes are counted and tallied with
+the EVM result. If all the paper based votes were to be counted, that combined
+with a verifiable digital fingerprint of the result will, in my opinion, go a
+long way towards assuring the public about the sanctity of the polling process.
