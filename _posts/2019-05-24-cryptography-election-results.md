@@ -281,9 +281,9 @@ different permutations of the result is <sup>n+k-1</sup>C<sub>k-1</sub>. The
 [stars and bars](https://en.wikipedia.org/wiki/Stars_and_bars_(combinatorics))
 method proves this theorem.
 
-* For 50 voters and 2 candidates, <sup>50</sup>C<sub>2</sub> = 51 different
+* For 50 voters and 2 candidates, <sup>51</sup>C<sub>1</sub> = 51 different
   results
-* For 100 voters and 5 candidates, <sup>100</sup>C<sub>5</sub> = 4598126
+* For 100 voters and 5 candidates, <sup>104</sup>C<sub>4</sub> = 4598126
   different results
 * For 600 voters and 10 candidates, there are 29922628655119426996 results
 * For 1000 voters and 15 candidates, there are 12734260985725567134324924085926
