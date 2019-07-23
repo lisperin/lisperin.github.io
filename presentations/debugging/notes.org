@@ -1,0 +1,19 @@
+* Structure
+* Consider
+** git bisect
+* Resources
+** Julia Evans https://jvns.ca/blog/2019/06/23/a-few-debugging-resources/
+** Julia Evans twitter
+*** https://twitter.com/b0rk/status/1142825259546140673 (see replies)
+*** how to read an error message https://twitter.com/b0rk/status/1146149101995778054
+*** how to handle intermittend bugs https://twitter.com/b0rk/status/1146431464701124608
+*** make your code easy to debug https://twitter.com/b0rk/status/1147261917918109696
+*** change one thing at a time https://twitter.com/b0rk/status/1147267035275104256
+*** you've probably seen this bug before https://twitter.com/b0rk/status/1148037549308481537
+*** get specific about what the bug is https://twitter.com/b0rk/status/1148046227621199873
+*** understand the bug you are trying to fix https://twitter.com/b0rk/status/1144352412557283328?s=21
+** Debugging book
+** how to debug https://blog.regehr.org/archives/199
+** sound debugging https://qnoid.com/2013/06/08/Sound-Debugging.html
+** 29 beginner Python errors https://pythonforbiologists.com/29-common-beginner-errors-on-one-page/
+** write code that's easy to delete and debug https://programmingisterrible.com/post/173883533613/code-to-debug
