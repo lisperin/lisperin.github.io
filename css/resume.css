@@ -1,0 +1,71 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+    font-family: Georgia, serif;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 16px;
+    max-width: 716px;
+    padding-left: 8px;
+    padding-right: 8px;
+    color: #333;
+}
+
+body > section {
+    padding-top: 8px;
+}
+
+h3 {
+    margin-bottom: 8px;
+}
+
+.time-period {
+    font-style: italic;
+}
+
+dl {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+dt {
+    display: inline;
+}
+
+dt::after {
+    content: ": ";
+}
+
+dd {
+    display: inline;
+    margin-left: 0;
+}
+
+.icon-envelope:before {
+    content: "✉️";
+}
+
+.icon-link:before {
+    content: "🔗";
+}
+
+.icon-location:before {
+    content: "📍";
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    font-style: normal;
+}
+
+a, a:visited {
+    color: rgb(0, 0, 238);
+}
+
+a.unstyled {
+    text-decoration: none;
+    color: inherit;
+}
