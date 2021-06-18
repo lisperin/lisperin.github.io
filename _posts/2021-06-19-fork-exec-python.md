@@ -118,8 +118,6 @@ and observe the output.
 **Exercise 2**: Remove the call to `time.sleep()` in the program above and
 observe the output.
 
-----
-
 ## Am I inside the parent or the child?
 
 One problem with the code we've written till now is this - after `fork()`
@@ -212,8 +210,6 @@ It is important that child process must exit immediately after `fn`
 returns. Which means that the "child pid is ..." line MUST NOT print inside the
 child process.
 
-----
-
 ## Waiting for children to exit
 
 Two things that might be important for a parent process - it might want to wait
@@ -280,8 +276,6 @@ succeeded. That is, the pipeline should stop on first failure.
 **Exercise 10**: Conversely, how do you run a pipeline of commands which should
 stop on first success?
 
-----
-
 ## Memory
 
 When a child is forked, it gets an almost identical copy of all the memory
@@ -312,8 +306,6 @@ else:
     print('Inside child, X:', X)
     print('Inside child, Y:', Y)
 ```
-
-----
 
 ## Files
 
@@ -392,8 +384,6 @@ will happen when this program is run?
 standard input linewise in both the parent and the child, what would happen?
 Modify the program in the previous exercise to read from stdin instead and
 explain the behaviour.
-
-----
 
 ## Inter-process communication
 
@@ -505,8 +495,6 @@ sufficient.
 [pipes]: https://en.wikipedia.org/wiki/Pipeline_(Unix)
 [file descriptors]: https://en.wikipedia.org/wiki/File_descriptor
 [pickle]: https://docs.python.org/3.7/library/pickle.html
-
----
 
 ## Exec
 
