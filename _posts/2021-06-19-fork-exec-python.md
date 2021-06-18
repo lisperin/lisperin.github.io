@@ -261,7 +261,8 @@ else:
 
 **Exercise 6**: Write a program that creates multiple children, and then waits
 for them. If any child exits, your program should print the pid of the child
-that exited.
+that exited. (Hint: check the different ways to specify the pid in the waitpid()
+call).
 
 **Exercise 7**: Which process is the parent of the parent Python process? You
 can figure this out by using the `ps` command.
