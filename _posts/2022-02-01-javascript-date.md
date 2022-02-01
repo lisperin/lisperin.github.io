@@ -74,7 +74,7 @@ from `Date`, and you might not want to bring an external dependency.
 
 Can you, in this case, store the result of a time zone conversion in a `Date`
 object? You can't. While technically you can do it, the fact that it is a
-timestamp will end up creating for you down the line.
+timestamp will end up creating problems for you down the line.
 
 Unfortunately, that is how some libraries (like [date-fns-tz][]) do it.
 
