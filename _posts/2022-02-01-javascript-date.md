@@ -215,3 +215,4 @@ Just keep in mind two things:
 [Luxon]: https://moment.github.io/luxon/#/
 [date-fns-tz]: https://github.com/marnusw/date-fns-tz
 [naive-date]: https://github.com/chaitanyagupta/naive-date
+[Python datetime module]: https://docs.python.org/3/library/datetime.html
