@@ -24,7 +24,7 @@ If you think a `Date` contains all the things it prints, you are wrong.
 * A `Date` does not contain hours, minutes, seconds or milliseconds
 * And, most importantly, a `Date` certainly does not contain any time zone
 
-As the title says, the `Date` is just a timestamp. It's a number represents
+As the title says, the `Date` is just a timestamp. It's a number that represents
 *milliseconds* since January 1, 1970 [UTC][]. That is, it's a single moment in
 time -- that moment (and the corresponding number) remains the same regardless
 of what time zone you are living in.
@@ -57,8 +57,9 @@ of confusion, especially when it comes to time zone conversions.
 ## Time zone conversions
 
 Given a `Date` (or a timestamp), can you tell what time the clock would say for
-it in a time zone that is not the same as your local time zone? Also, what would
-a certain time, say 5 AM, in your time zone like in another?
+it in a time zone that is not the same as your local time zone? Or, say you need
+to schedule a meeting across time zones. Is 10 AM in India too late in New York
+-- what would the local time be in another time zone at a particular moment?
 
 For the longest time, browsers did not expose time zone data to JavaScript APIs,
 so if you wanted to do time zone conversions on the client, you had to use a
