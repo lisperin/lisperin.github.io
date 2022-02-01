@@ -5,6 +5,9 @@ category: javascript
 layout: post
 ---
 
+1. TOC
+{:toc}
+
 ## Introduction
 
 The thing with the Javascript [`Date`][Date] object is that, what it prints is
