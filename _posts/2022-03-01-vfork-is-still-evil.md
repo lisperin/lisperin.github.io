@@ -61,7 +61,7 @@ You cannot blindly replace calls to `fork()` with `vfork()`.
 
 `fork()` has multiple use cases, but `vfork()` has only one: when you want to
 call the `exec()` family of functions after `vfork()`. That is, when you want to
-launch a new process.
+launch another program.
 
 And be careful what you do in the child process before calling `exec()`. As
 we've seen above, anything that modifies memory is unsafe. So is calling any
