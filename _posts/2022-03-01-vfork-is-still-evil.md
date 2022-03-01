@@ -76,4 +76,4 @@ wrong. That is because all of stdio is NOT async-signal-safe.
 All said and done -- just stick to `fork()`. Sure, `fork()` has its problems and
 caveats, especially when you throw threads into the mix, but it is almost always
 the better choice when compared to `vfork()`. Use `vfork()` only when you truly
-need its performance benefits, and understand its caveats well.
+need its performance benefits, and understand its problems well.
