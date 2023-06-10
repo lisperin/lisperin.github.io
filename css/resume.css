@@ -4,6 +4,14 @@
   box-sizing: border-box;
 }
 
+header h1 {
+    margin-bottom: 0;
+}
+
+header {
+    margin-bottom: 1rem;
+}
+
 body {
     font-family: Georgia, serif;
     margin-left: auto;
@@ -25,24 +33,6 @@ h3 {
 
 .time-period {
     font-style: italic;
-}
-
-dl {
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-dt {
-    display: inline;
-}
-
-dt::after {
-    content: ": ";
-}
-
-dd {
-    display: inline;
-    margin-left: 0;
 }
 
 .icon-envelope:before {
@@ -68,4 +58,26 @@ a, a:visited {
 a.unstyled {
     text-decoration: none;
     color: inherit;
+}
+
+abbr[title] {
+    text-decoration: none;
+}
+
+.visuallyhidden {
+    display: none;
+}
+
+footer {
+    border-top: 1px solid grey;
+    margin-top: 2rem;
+    font-size: 0.8rem;
+}
+
+footer div {
+    padding-top: 1rem;
+}
+
+dl div {
+    margin-bottom: 0.5rem;
 }
